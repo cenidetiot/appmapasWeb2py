@@ -1,10 +1,12 @@
-var map = L.map("mapid").setView([18.876551, -99.220100], 19);
+/*var map = L.map("mapid").setView([18.876551, -99.220100], 19);
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
+
 var coordinatesConverted = []; 
 var polylineArrayCoordinates = [];
 var editableLayers = new L.FeatureGroup();
+
 map.addLayer(editableLayers);
 
 var drawControl = new L.Control.Draw({
@@ -42,7 +44,7 @@ L.marker([18.876551, -99.220100]).addTo(map)
     .bindPopup('CENIDET.<br> CAMPUS PALMIRA.')
     .openPopup();
 
-map.on('draw:created', function (e) {
+/*map.on('draw:created', function (e) {
    var type = e.layerType;
    console.log(type);
    var layer = e.layer;
@@ -83,4 +85,4 @@ map.on('draw:created', function (e) {
    // Do whatever else you need to. (save to db; add to map etc)
    editableLayers.addLayer(layer);
    //drawnItems.addLayer(layer);
-});
+});*/

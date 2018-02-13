@@ -2,10 +2,6 @@
 <!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="{{=T.accepted_language or 'en'}}"> <!--<![endif]-->
   <head>
     <meta charset="utf-8">
-    <!-- www.phpied.com/conditional-comments-block-downloads/ -->
-    <!-- Always force latest IE rendering engine
-         (even in intranet) & Chrome Frame
-         Remove this if you use the .htaccess -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge{{=not request.is_local and ',chrome=1' or ''}}">
     <!--  Mobile Viewport Fix
           j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag
@@ -29,6 +25,8 @@
      <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.js"></script>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
     <!-- All JavaScript at the bottom, except for Modernizr which enables
     HTML5 elements & feature detects -->
     <script src="{{=URL('static','js/modernizr-2.8.3.min.js')}}"></script>

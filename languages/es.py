@@ -210,6 +210,7 @@
 'insert new': 'inserte nuevo',
 'insert new %s': 'inserte nuevo %s',
 'Installed applications': 'Aplicaciones instaladas',
+'Institution Map': 'Institution Map',
 'Insufficient privileges': 'Privilegios insuficientes',
 'internal error': 'error interno',
 'Internal State': 'Estado Interno',

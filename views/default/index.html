@@ -1,13 +1,14 @@
 {{extend 'layout.html'}}
 
 {{block head}}
-<link rel="stylesheet" href="{{=URL('static','css/estilosapp.css')}}"/>
+<link rel="stylesheet" href="{{=URL('static','css/estilosApp.css')}}"/>
 <link rel="stylesheet" href="{{=URL('static','css/leaflet.css')}}"/>
 <link rel="stylesheet" href="{{=URL('static','css/leafletDraw.css')}}"/>
 {{end}} 
 
 {{block page_js}}
-<script src="{{=URL('static','js/appMapas.js')}}"></script>
+<script src="{{=URL('static','js/appMapa.js')}}"></script>
+<script src="{{=URL('static','js/search.js')}}"></script>
 {{end}}
 
 {{block header}}
@@ -17,34 +18,39 @@
 {{end}}
 
 {{if 'message' in globals():}}
+
+<h2>Who was in the institution?</h2>
+<form method="GET" action="javascript:void(0);">
+  <label for="select-search-zone"> Select zone insitution: </label>
+  <select id="select-search-zone" name="selectorZone">
+    <option value="" disabled selected>Select an option</option>
+  </select>
+  <br>
+  <label for="options-search-user"> Search a user by: </label>
+  <select id="options-search-usert" name="selectorSearch">
+    <option value="idDevice" selected> ID Device </option>
+    <option value="owner"> Owner Device </option>
+    <!--<option value="username"> Username </option>-->
+  </select>
+  <br>
+  <label for="input-search" id="label-input-search">ID Device: </label>
+  <input type="text" name="input-search" id="input-search">
+  <br>
+  <label for="options-list" id="label-options-list"> Select a search parameter: </label>
+  <select id="options-list" name="selectorparameterSearch">
+    <option value="" disabled selected>Select an option</option>
+    <option value="date"> Date </option>
+    <option value="dateTime"> Date and Time </option>
+  </select>
+  <br>
+  <label for="dateInput" id="label-date-input">Date: </label>
+  <input type="date" name="date" id="dateInput">
+  <input type="datetime-local" name="dateTime" id="dateTimeInput">
+  <br>
+  <button type="button" id="query" onclick="searching()"> Consult </button>
+</form>
 <h2>{{=message}}</h2>
 <div id="mapid"></div>
-
-<!--<p class="lead">{{=T('How did you get here?')}}</p>
-<ol>
-  <li>{{=T('You are successfully running web2py')}}</li>
-  <li>{{=XML(T('You visited the url %s', A(request.env.path_info,_href=request.env.path_info)))}}</li>
-  <li>{{=XML(T('Which called the function %s located in the file %s',
-    (A(request.function+'()',_href='#'),
-    A('web2py/applications/%(application)s/controllers/%(controller)s.py' % request,
-    _href=URL('admin','default','peek', args=(request.application,'controllers',request.controller+'.py'))))))}}</li>
-  <li>{{=XML(T('The output of the file is a dictionary that was rendered by the view %s',
-    A('web2py/applications/%(application)s/views/%(controller)s/index.html' % request,
-    _href=URL('admin','default','peek',args=(request.application,'views',request.controller,'index.html')))))}}</li>
-  <li>{{=T('You can modify this application and adapt it to your needs')}}</li>
-</ol>-->
-<!--<center style="padding:50px">
-  <a class="btn btn-primary" href="{{=URL('admin','default','index')}}">
-    <i class="glyphicon glyphicon-cog"></i>
-    {{=T("admin")}}
-  </a>
-  <a class="btn btn-secondary" href="{{=URL('examples','default','index')}}">{{=T("Online examples")}}</a>
-  <a class="btn btn-secondary" href="http://web2py.com">web2py.com</a>
-  <a class="btn btn-secondary" href="http://web2py.com/book">{{=T('Documentation')}}</a>
-  <a class="btn btn-secondary" href="{{=URL('default','api_get_user_email')}}">{{=T('API Example')}}</a>
-  <a class="btn btn-secondary" href="{{=URL('default','grid/auth_user')}}">{{=T('Grid Example')}}</a>
-  <a class="btn btn-secondary" href="{{=URL('default','wiki')}}">{{=T('Wiki Example')}}</a>
-</center>-->
 
 {{elif 'content' in globals():}}
 {{=content}}
