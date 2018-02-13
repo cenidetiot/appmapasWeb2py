@@ -9,7 +9,6 @@ var campus = [];
 var campusData;
 var campusLocation = [];
 var map;
-var firstime = false;
 //MAP CONTAINER 
 map = L.map("mapid").setView([0,0], 2);
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -32,7 +31,7 @@ $.get("https://driving-monitor-service.herokuapp.com/api/campus", function(data)
         });
     }
 });
-//SELECTOR CHANGE VALUE: NAME=SELECTOR SEARCH
+//SELECTOR CHANGE VALUE: NAME=SELECTOR ZONE
 $('select[name=selectorZone]').change(function() {
     let idCampus = $(this).val()
     //GET ALL INFORMATION OF A SPECIFIC CAMPUS
@@ -130,6 +129,7 @@ function searchingOwnerDevice(){
         $.get("https://cratedrivingapp-service.herokuapp.com/api/locationOwnerDate?owner="+searchParameter+"&date="+date, function(data){
             if(data.length===0){
                 console.log("No se encontraron dispositivos con el id de usuario: "+searchParameter);
+                alert("No se encontraron dispositivos con el id de usuario: "+searchParameter);
             }
             else{
                 let dataReceived = JSON.stringify(data[0]);
@@ -159,6 +159,7 @@ function searchingOwnerDevice(){
         $.get("https://cratedrivingapp-service.herokuapp.com/api/locationOwnerDateTime?owner="+searchParameter+"&date="+dateTimeSplit[0]+"&time="+timeHour, function(data){
             if(data.length===0){
                 console.log("No se encontraron dispositivos con el id de usuario: "+searchParameter);
+                alert("No se encontraron dispositivos con el id de usuario: "+searchParameter);
             }
             else{
                 let dataReceived = JSON.stringify(data[0]);
@@ -186,7 +187,8 @@ function searchingIDDevice(){
         console.log(date);
         $.get("https://cratedrivingapp-service.herokuapp.com/api/locationDeviceDate?idDevice="+searchParameter+"&date="+date, function(data){
             if(data.length===0){
-                console.log("No se encontraron dispositivos con el id: "+searchParameter);
+                console.log("No se encontraron dispositivos con el idDevice: "+searchParameter);
+                alert("No se encontraron dispositivos con el idDevice: "+searchParameter);
             }
             else{
                 let dataReceived = JSON.stringify(data[0]);
@@ -216,6 +218,7 @@ function searchingIDDevice(){
         $.get("https://cratedrivingapp-service.herokuapp.com/api/locationDeviceDateTime?idDevice="+searchParameter+"&date="+dateTimeSplit[0]+"&time="+timeHour, function(data){
             if(data.length===0){
                 console.log("No se encontraron dispositivos con el id de usuario: "+searchParameter);
+                alert("No se encontraron dispositivos con el idDevice: "+searchParameter);
             }
             else{
                 let dataReceived = JSON.stringify(data[0]);
@@ -238,21 +241,28 @@ function searchingIDDevice(){
     }
 }
 function searchingUsername(){
-    if(valueSelectorParameterSearch === "date"){
-        var date = $("#dateInput").val();
-        console.log(date);
-    }
-    else if(valueSelectorParameterSearch === "dateTime"){
-        var dateTime = $("#dateTimeInput").val();   
-        console.log(dateTime);
-    }
-    else{
-        console.log("You need to specify a parameter of search");
-    }
+    let nameArray = searchParameter.split(" ");
+    let first_name = nameArray[0];
+    let last_name = nameArray[1];
+    $.get(`https://smartsdk-web-service.herokuapp.com/api/user?first_name=${first_name}&last_name=${last_name}`, function(data){
+        console.log(status);
+        if(data!=null){
+            console.log(data);
+            let idUser = "User:"+data['id'];
+            console.log(idUser),
+            searchParameter = idUser;
+            console.log(searchParameter);
+            searchingOwnerDevice();
+        }
+        else{
+            alert("Usuario de nombre: "+first_name+" "+last_name+" no encontrado")
+        }
+    });
 }
+
 function showMap(location, dataReceived){
     console.log(location);
-    console.log(JSON.parse(dataReceived));
+    let data = JSON.parse(dataReceived);
 
     map.remove();
     map = L.map("mapid").setView(location, 19);
@@ -260,8 +270,6 @@ function showMap(location, dataReceived){
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    var coordinatesConverted = []; 
-    var polylineArrayCoordinates = [];
     var editableLayers = new L.FeatureGroup();
 
     map.addLayer(editableLayers);
@@ -298,6 +306,6 @@ function showMap(location, dataReceived){
     map.addControl(drawControl);
 
     L.marker(location).addTo(map)
-        .bindPopup('CENIDET.<br> CAMPUS PALMIRA.')
+        .bindPopup('idDevice: '+data['entity_id']+'<br> Owner: '+data['owner'])
         .openPopup();
 }

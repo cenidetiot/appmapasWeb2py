@@ -13,44 +13,52 @@
 
 {{block header}}
 <center style="background-color: #333; color:white; padding:30px">
-  <h1>/{{=request.application}}/{{=request.controller}}/{{=request.function}}
+  <h1> Maps Application </h1>
 </center>
 {{end}}
 
 {{if 'message' in globals():}}
 
-<h2>Who was in the institution?</h2>
-<form method="GET" action="javascript:void(0);">
-  <label for="select-search-zone"> Select zone insitution: </label>
-  <select id="select-search-zone" name="selectorZone">
-    <option value="" disabled selected>Select an option</option>
-  </select>
-  <br>
-  <label for="options-search-user"> Search a user by: </label>
-  <select id="options-search-usert" name="selectorSearch">
-    <option value="idDevice" selected> ID Device </option>
-    <option value="owner"> Owner Device </option>
-    <!--<option value="username"> Username </option>-->
-  </select>
-  <br>
-  <label for="input-search" id="label-input-search">ID Device: </label>
-  <input type="text" name="input-search" id="input-search">
-  <br>
-  <label for="options-list" id="label-options-list"> Select a search parameter: </label>
-  <select id="options-list" name="selectorparameterSearch">
-    <option value="" disabled selected>Select an option</option>
-    <option value="date"> Date </option>
-    <option value="dateTime"> Date and Time </option>
-  </select>
-  <br>
-  <label for="dateInput" id="label-date-input">Date: </label>
-  <input type="date" name="date" id="dateInput">
-  <input type="datetime-local" name="dateTime" id="dateTimeInput">
-  <br>
-  <button type="button" id="query" onclick="searching()"> Consult </button>
-</form>
-<h2>{{=message}}</h2>
-<div id="mapid"></div>
+<div class="">
+  <div class="row">
+    <div class="col-sm-4" >
+      <h2>Who was in the institution?</h2>
+        <div class="form-group">
+          <form method="GET" action="javascript:void(0);">
+            <label for="select-search-zone"> Select zone insitution: </label>
+            <select id="select-search-zone" name="selectorZone" class="form-control">
+              <option value="" disabled selected>Select an option</option>
+            </select>
+            <label for="options-search-user"> Search a user by: </label>
+            <select id="options-search-usert" name="selectorSearch" class="form-control">
+              <option value="idDevice" selected> ID Device </option>
+              <option value="owner"> Owner Device </option>
+              <option value="username"> Username </option>
+            </select>
+            <label for="input-search" id="label-input-search">ID Device: </label>
+            <input type="text" name="input-search" id="input-search" class="form-control">
+            <label for="options-list" id="label-options-list"> Select a search parameter: </label>
+            <select id="options-list" name="selectorparameterSearch" class="form-control">
+              <option value="" disabled selected>Select an option</option>
+              <option value="date"> Date </option>
+              <option value="dateTime"> Date and Time </option>
+            </select>
+            <label for="dateInput" id="label-date-input">Date: </label>
+            <input type="date" name="date" id="dateInput" class="form-control">
+            <input type="datetime-local" name="dateTime" id="dateTimeInput" class="form-control">
+            <br>
+            <button type="button" id="query" onclick="searching()" class="btn btn-outline-success col-12"> Consult </button>
+          </form>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <h2 class="center"> Insitution Map</h2>
+        <div id="mapid">
+        </div>
+      </div>
+    </div>
+  </div>
+      
 
 {{elif 'content' in globals():}}
 {{=content}}
