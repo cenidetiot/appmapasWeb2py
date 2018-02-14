@@ -59,6 +59,7 @@ $('select[name=selectorZone]').change(function() {
             campusLocation = data['location'];
             let campusLatitude = data['pointMap'][0]['latitude'];
             let campusLongitude = data['pointMap'][0]['longitude'];
+            map.off();
             map.remove();
             map = L.map("mapid").setView([campusLatitude,campusLongitude], 19);
             L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -349,13 +350,13 @@ function showMap(location, dataReceived){
     console.log(location);
     let data = JSON.parse(dataReceived);
 
-    map.remove();
+    map.off();
     map = L.map("mapid").setView(location, 19);
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     polyline = L.polyline(campusData.location).addTo(map);
-    /*var editableLayers = new L.FeatureGroup();
+    var editableLayers = new L.FeatureGroup();
 
     map.addLayer(editableLayers);
 
@@ -388,7 +389,7 @@ function showMap(location, dataReceived){
             edit: false
         }
     });
-    map.addControl(drawControl);*/
+    map.addControl(drawControl);
 
     L.marker(location).addTo(map)
         .bindPopup('idDevice: '+data['entity_id']+'<br> Owner: '+data['owner'])
