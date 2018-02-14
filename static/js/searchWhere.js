@@ -26,19 +26,31 @@ $(function ($) {
                     polyline = L.polyline(campus.location, {color: 'red'}).addTo(map);
                     //console.log(campus.location.join(";"))
                     $('#campuslist').append($('<option>', {
-                        value: campus._id,
+                        value: index,
                         text: campus.name
                     }));
                 })
             }
         });
     }
+
+    $( "#campuslist" ).change(function() {
+        
+    })
+
     //SELECTOR CHANGE VALUE: NAME=SELECTOR ZONE
     $('select[name=campuslist]').change(function() {
         let idCampus = $(this).val()
         console.log("hellllooo")
+        $( "#campuslist option:selected" ).each(function() {
+            if($( this ).val() === "Choose the campus...")
+                window.campusSelected =undefined;
+            else
+                window.campusSelected = $( this ).val() ;
+          });
+
         //GET ALL INFORMATION OF A SPECIFIC CAMPUS
-        $.get("https://driving-monitor-service.herokuapp.com/api/campus/"+idCampus, function(data){
+        $.get("https://driving-monitor-service.herokuapp.com/api/campus/"+window.campus[window.campusSelected]._id, function(data){
             if(data.length===0){
                 console.log("No se encontró información del campus");
             }
@@ -58,11 +70,14 @@ $(function ($) {
     });
 
     function drawMarkers (data, type , popMenssage) {
-
+        console.log("Campus" ,window.campus[window.campusSelected])
         if (window.campusSelected !== undefined){
+            console.log(window.campusSelected)
             data.georel ="coveredBy";
             data.geometry="polygon";
+            console.log(window.campus)
             data.coords = window.campus[window.campusSelected].location.join(';');
+            
         }
 
         let icon = null;
@@ -80,12 +95,13 @@ $(function ($) {
             success:function (respuesta) {
                 
                 if(respuesta.length < 1){
+                    alert("El usuario con id: "+data["id"]+" no se encuentra en el campus");
                     console.log("No se encontró")
                 }
                 respuesta.map( (device) => {
                     let coordinates = device.location.split(",");
                     L.marker(coordinates,{icon : icon}).addTo(map)
-                    .bindPopup(popMenssage)
+                    .bindPopup(device.id + "<br> " + device.owner)
                     .openPopup();
                 })
             }
