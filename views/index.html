@@ -1,0 +1,60 @@
+{{extend 'layout.html'}}
+
+{{block head}}
+<link rel="stylesheet" href="{{=URL('static','css/estilosapp.css')}}"/>
+<link rel="stylesheet" href="{{=URL('static','css/leaflet.css')}}"/>
+<link rel="stylesheet" href="{{=URL('static','css/leafletDraw.css')}}"/>
+{{end}} 
+
+
+
+{{if 'message' in globals():}}
+
+<div class="">
+    <div class="row">
+      <div class="col-sm-4" >
+          <div class="form-group">
+            <div class="form-group">
+              <label for="campuslist">Campus</label>
+              <select class="form-control" id="campuslist">
+                <option>Choose the campus...</option>
+              </select>
+            </div>
+
+            <label for="device">Search by Device ID</label>
+            <input type="text" class="form-control" id="idDevice" placeholder="Search by Device ID">
+            <button class="btn btn-primary" id="deviceButton">Search</button>
+            <br>
+
+            <label for="exampleFormControlInput1">Search by user ID</label>
+            <input type="email" class="form-control" id="userid" placeholder="Example : User:41">
+            <button class="btn btn-primary" id="userIdButton" >Search</button>
+
+            <br>
+
+            <label for="exampleFormControlInput1">Search by user name</label>
+            <input type="email" class="form-control" id="name" placeholder="Example : Daniel Torres">
+            <button class="btn btn-primary" id="nameButton" >Search</button>
+          </div>
+      </div>
+      <div class="col-sm-8" id="mapid">
+      </div>
+    </div>
+  </div>
+
+{{block page_js}}
+  <script src="{{=URL('static','js/appMap.js')}}"></script>
+{{end}}
+
+
+  
+
+{{elif 'content' in globals():}}
+{{=content}}
+{{else:}}
+{{=BEAUTIFY(response._vars)}}
+{{pass}}
+
+
+
+

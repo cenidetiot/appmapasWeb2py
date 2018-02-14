@@ -38,11 +38,11 @@
   <body> 
     <div class="w2p_flash alert alert-dismissable">{{=response.flash or ''}}</div>
     <!-- Navbar ======================================= -->
-    
-
+   
     <!-- Masthead - Content modify for the html pages who extend of this page ===================================== -->    
     {{block header}}
     {{end}}
+    
     {{block page_content}}
     {{end}}
     <!-- Main ========================================= -->
@@ -68,6 +68,7 @@
     </footer>
     {{end}}
     <!-- The global javascript files =============================== -->
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
     <script src="{{=URL('static','js/bootstrap.min.js')}}"></script>
     <script src="{{=URL('static','js/web2py-bootstrap4.js')}}"></script>
 

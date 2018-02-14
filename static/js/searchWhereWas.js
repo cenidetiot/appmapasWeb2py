@@ -9,12 +9,27 @@ var campus = [];
 var campusData;
 var campusLocation = [];
 var map;
+var isOnCampus = false;
+
+//HIDE ELEMNTS
+$("#dateTimeInput").hide();
+$("#FormGroup2").hide();
+
+$("#was").click (function hideFormGroup1(event){
+    event.preventDefault();
+    $("#FormGroup2").hide();
+    $("#FormGroup1").show();
+});
+$("#are").click (function hideFormGroup2(){
+    event.preventDefault();
+    $("#FormGroup1").hide();
+    $("#FormGroup2").show();
+});
 //MAP CONTAINER 
 map = L.map("mapid").setView([0,0], 2);
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
-$("#dateTimeInput").hide();
 
 //GET ALL CAMPUS REGISTERED
 $.get("https://driving-monitor-service.herokuapp.com/api/campus", function(data){
@@ -37,7 +52,7 @@ $('select[name=selectorZone]').change(function() {
     //GET ALL INFORMATION OF A SPECIFIC CAMPUS
     $.get("https://driving-monitor-service.herokuapp.com/api/campus/"+idCampus, function(data){
         if(data.length===0){
-            console.log("No se encontraron información del campus ");
+            console.log("No se encontró información del campus");
         }
         else{
             campusData = data;
@@ -49,6 +64,7 @@ $('select[name=selectorZone]').change(function() {
             L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);  
+            polyline = L.polyline(campusData.location, {color: '#ff6666'}).addTo(map);
         }
     });
 });
@@ -102,23 +118,40 @@ function searching(){
         console.log("You need to specify a option search ");
     }
 }
-function searchingUserInCampus(locationCoordinates){
+async function searchingUserInCampus(locationCoordinates){
     console.log(locationCoordinates.join(","))
     console.log(campusLocation.join(";"));
     let query = {
         point: locationCoordinates.join(","),
         polygon: campusLocation.join(";")
-      }
-    $.post("https://driving-monitor-service.herokuapp.com/api/pointCampus",query,function(data, status){
-        let isOnCampus = data['isOnCampus'];
-        console.log(data['isOnCampus']);
-        if(!isOnCampus){
-            return false;
+    }
+    /*let query = {
+        point: "18.879683, -99.221627",
+        polygon: "18.87995433844068,-99.2219396866858;18.87998986907176,-99.22182166948915;18.87991373199594,-99.22162855044007;18.87967516893432,-99.22142470255497;18.879385847318705,-99.22103846445683;18.879380771496425,-99.22088289633396;18.879243724236808,-99.22103310003877;18.87901531188834,-99.22112965956333;18.878832581785367,-99.22118866816163;18.87869045823416,-99.22120476141575;18.878553410409896,-99.22126377001405;18.878477272681298,-99.2213442362845;18.878665079015903,-99.22130132094026;18.878771671706748,-99.22146761789918;18.878898567678874,-99.22155344858766;18.879035615220808,-99.22143006697297;18.879137131846274,-99.22143006697297;18.879304634143818,-99.22147298231724;18.879395998962796,-99.22156417742372;18.87947721209341,-99.22164464369416;18.879680244747682,-99.22196114435792;18.879827443268194,-99.22200405970219;18.87995433844068,-99.2219396866858"
+    } */   
+    await $.ajax({  
+        url:'https://driving-monitor-service.herokuapp.com/api/pointCampus',
+        data: query,
+        type:'POST',
+        dataType: "json",
+        success:function (respuesta) {   
+            isOnCampus= respuesta.isOnCampus;
+            console.log(isOnCampus);
+            return;
         }
-        else{
-            return true;
-        }
+    }); 
+    console.log(isOnCampus);
+   /* $.post("",query,function(data, status){
+        window.isOnCampus = data['isOnCampus'];
+        console.log(data['isOnCampus']);       
     });
+    console.log(window.isOnCampus);*/
+    if(isOnCampus){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 function searchingOwnerDevice(){
     if(valueSelectorParameterSearch === "date"){
@@ -128,8 +161,8 @@ function searchingOwnerDevice(){
         console.log(date);
         $.get("https://cratedrivingapp-service.herokuapp.com/api/locationOwnerDate?owner="+searchParameter+"&date="+date, function(data){
             if(data.length===0){
-                console.log("No se encontraron dispositivos con el id de usuario: "+searchParameter);
-                alert("No se encontraron dispositivos con el id de usuario: "+searchParameter);
+                console.log("No se encontraron registros del dispositivos con owner: "+searchParameter+" en la fecha especificada: "+date);
+                alert("No se encontraron registros del dispositivo con owner: "+searchParameter+" en la fecha especificada: "+date);
             }
             else{
                 let dataReceived = JSON.stringify(data[0]);
@@ -137,13 +170,26 @@ function searchingOwnerDevice(){
                 locationCoordinates[0] = data[0]['location'][1];
                 locationCoordinates[1] = data[0]['location'][0];
                 console.log("Location: " + locationCoordinates);
-                if(searchingUserInCampus(locationCoordinates)){
+                let recibi = searchingUserInCampus(locationCoordinates);
+                recibi.then(function(result) {
+                    console.log("here results");
+                    console.log(result) //will log results.
+                    if(result){
+                        showMap(locationCoordinates, dataReceived);
+                    }
+                    else{
+                        alert("El usuario con id: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
+                        console.log("El usuario con id: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
+                    }   
+                 })
+                //console.log(recibi);
+                /*if(recibi){
                     showMap(locationCoordinates, dataReceived);
                 }
                 else{
                     alert("El usuario con id: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
-                    console.log("No se encontraron dispositivos con el id de usuario: "+searchParameter+", en la zona del campus especificado");
-                }           
+                    console.log("El usuario con id: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
+                } */ 
             }
         });
     }
@@ -158,8 +204,8 @@ function searchingOwnerDevice(){
         console.log(timeHour);
         $.get("https://cratedrivingapp-service.herokuapp.com/api/locationOwnerDateTime?owner="+searchParameter+"&date="+dateTimeSplit[0]+"&time="+timeHour, function(data){
             if(data.length===0){
-                console.log("No se encontraron dispositivos con el id de usuario: "+searchParameter);
-                alert("No se encontraron dispositivos con el id de usuario: "+searchParameter);
+                console.log("No se encontraron registros del dispositivo con owner: "+searchParameter+" en la fecha y hora especificada: "+dateTime);
+                alert("No se encontraron registros del dispositivo con owner: "+searchParameter+" en la fecha y hora especificada: "+dateTime);
             }
             else{
                 let dataReceived = JSON.stringify(data[0]);
@@ -167,17 +213,31 @@ function searchingOwnerDevice(){
                 locationCoordinates[0] = data[0]['location'][1];
                 locationCoordinates[1] = data[0]['location'][0];
                 console.log("Location: " + locationCoordinates);
-                if(searchingUserInCampus(locationCoordinates)){
+                let recibi = searchingUserInCampus(locationCoordinates);
+                recibi.then(function(result) {
+                    console.log("here results");
+                    console.log(result) //will log results.
+                    if(result){
+                        showMap(locationCoordinates, dataReceived);
+                    }
+                    else{
+                        alert("El usuario con id: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha y hora: "+dateTime);
+                        console.log("El usuario con id: "+searchParameter+" no se encontró en la zona del campus especificado en la fechay hora: "+dateTime);
+                    }           
+                        
+                /*if(searchingUserInCampus(locationCoordinates)){
                     showMap(locationCoordinates, dataReceived);
                 }
                 else{
-                    alert("El usuario con id: "+searchParameter+" no se encontró en la zona del campus especificado el día y hora: "+dateTime);
-                    console.log("No se encontraron dispositivos con el id de usuario: "+searchParameter+", en la zona del campus especificado");
-                }           
+                    alert("El usuario con id: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha y hora: "+dateTime);
+                    console.log("El usuario con id: "+searchParameter+" no se encontró en la zona del campus especificado en la fechay hora: "+dateTime);
+                } */          
+                })
             }
         });
     }
     else{
+        alert("You need to specify a parameter of search");
         console.log("You need to specify a parameter of search");
     }
 }
@@ -187,8 +247,8 @@ function searchingIDDevice(){
         console.log(date);
         $.get("https://cratedrivingapp-service.herokuapp.com/api/locationDeviceDate?idDevice="+searchParameter+"&date="+date, function(data){
             if(data.length===0){
-                console.log("No se encontraron dispositivos con el idDevice: "+searchParameter);
-                alert("No se encontraron dispositivos con el idDevice: "+searchParameter);
+                console.log("No se encontraron registros del dispositivo con idDevice: "+searchParameter+" en la fecha especificada: "+date);
+                alert("No se encontraron registros del dispositivo con idDevice: "+searchParameter+" en la fecha especificada: "+date);
             }
             else{
                 let dataReceived = JSON.stringify(data[0]);
@@ -196,13 +256,25 @@ function searchingIDDevice(){
                 locationCoordinates[0] = data[0]['location'][1];
                 locationCoordinates[1] = data[0]['location'][0];
                 console.log("Location: " + locationCoordinates);
-                if(searchingUserInCampus(locationCoordinates)){
+                let recibi = searchingUserInCampus(locationCoordinates);
+                recibi.then(function(result) {
+                    console.log("here results");
+                    console.log(result) //will log results.
+                    if(result){
+                        showMap(locationCoordinates, dataReceived);
+                    }
+                    else{
+                        alert("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
+                        console.log("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
+                    }     
+                })
+                /*if(searchingUserInCampus(locationCoordinates)){
                     showMap(locationCoordinates, dataReceived);
                 }
                 else{
                     alert("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
-                    console.log("No se encontraron dispositivos con el id de usuario: "+searchParameter+", en la zona del campus especificado");
-                }           
+                    console.log("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
+                }          */ 
             }
         });
     }
@@ -217,26 +289,39 @@ function searchingIDDevice(){
         console.log(timeHour);
         $.get("https://cratedrivingapp-service.herokuapp.com/api/locationDeviceDateTime?idDevice="+searchParameter+"&date="+dateTimeSplit[0]+"&time="+timeHour, function(data){
             if(data.length===0){
-                console.log("No se encontraron dispositivos con el id de usuario: "+searchParameter);
-                alert("No se encontraron dispositivos con el idDevice: "+searchParameter);
+                console.log("No se encontraron registros del dispositivo con el iDevice: "+searchParameter+"en la fecha y hora especificados: "+dateTime);
+                alert("No se encontraron registros del dispositivo con el iDevice: "+searchParameter+"en la fecha y hora especificados: "+dateTime);
             }
             else{
                 let dataReceived = JSON.stringify(data[0]);
-                console.log("Data: " + dataReceived);
+                console.log("Data: " + dataReceived); 
                 locationCoordinates[0] = data[0]['location'][1];
                 locationCoordinates[1] = data[0]['location'][0];
                 console.log("Location: " + locationCoordinates);
-                if(searchingUserInCampus(locationCoordinates)){
+                let recibi = searchingUserInCampus(locationCoordinates);
+                recibi.then(function(result) {
+                    console.log("here results");
+                    console.log(result) //will log results.
+                    if(result){
+                        showMap(locationCoordinates, dataReceived);
+                    }
+                    else{
+                        alert("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha y hora especificada: "+dateTime);
+                        console.log("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha y hora especificada: "+dateTime);
+                    }    
+                })
+                /*if(searchingUserInCampus(locationCoordinates)){
                     showMap(locationCoordinates, dataReceived);
                 }
                 else{
-                    alert("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado el día y hora: "+dateTime);
-                    console.log("No se encontraron dispositivos con el id de usuario: "+searchParameter+", en la zona del campus especificado");
-                }           
+                    alert("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha y hora especificada: "+dateTime);
+                    console.log("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha y hora especificada: "+dateTime);
+                }*/           
             }
         });     
     }
     else{
+        alert("You need to specify a parameter of search");
         console.log("You need to specify a parameter of search");
     }
 }
@@ -269,8 +354,8 @@ function showMap(location, dataReceived){
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
-
-    var editableLayers = new L.FeatureGroup();
+    polyline = L.polyline(campusData.location).addTo(map);
+    /*var editableLayers = new L.FeatureGroup();
 
     map.addLayer(editableLayers);
 
@@ -303,7 +388,7 @@ function showMap(location, dataReceived){
             edit: false
         }
     });
-    map.addControl(drawControl);
+    map.addControl(drawControl);*/
 
     L.marker(location).addTo(map)
         .bindPopup('idDevice: '+data['entity_id']+'<br> Owner: '+data['owner'])
