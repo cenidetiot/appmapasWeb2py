@@ -95,7 +95,7 @@ $(function ($) {
             success:function (respuesta) {
                 
                 if(respuesta.length < 1){
-                    alert("El usuario con id: "+data["id"]+" no se encuentra en el campus");
+                    alert("El usuario especificado no se encuentra en el campus seleccionado.");
                     console.log("No se encontró")
                 }
                 respuesta.map( (device) => {

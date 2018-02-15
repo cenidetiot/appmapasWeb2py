@@ -7,7 +7,7 @@
 {{end}} 
 
 {{block page_js}}
-<script src="{{=URL('static','js/searchWhere2.js')}}"></script>
+<script src="{{=URL('static','js/searchWhere1.js')}}"></script>
 <script src="{{=URL('static','js/searchWhere.js')}}"></script>
 {{end}}
 
@@ -34,7 +34,7 @@
       <div class="form-group" id="FormGroup1">
         <h2>Who was in the institution?</h2>
           <form method="GET" action="javascript:void(0);">
-            <label for="select-search-zone"> Select zone insitution: </label>
+            <label for="select-search-zone"> Select the campus: </label>
             <select id="select-search-zone" name="selectorZone" class="form-control">
               <option value="" disabled selected>Select an option</option>
             </select>
@@ -62,7 +62,7 @@
         <div class="form-group" id="FormGroup2">
           <h2>Who are inside in the institution?</h2>
           <div class="form-group">
-            <label for="campuslist">Campus</label>
+            <label for="campuslist">Select the Campus: </label>
             <select class="form-control" id="campuslist" name="campuslist">
               <option>Choose the campus...</option>
             </select>
