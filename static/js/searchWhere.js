@@ -99,8 +99,10 @@ $('select[name=selectorSearch]').change(function() {
     }
     console.log($(this).val())
 });
+valueSelectorParameterSearch = $('select[name=selectorparameterSearch]').val()
+console.log("value select date: "+valueSelectorParameterSearch);
 //SELECTOR CHANGE VALUE: NAME= SELECTOR PARAMETER SEARCH
-$('select[name=selectorparameterSearch]').change(function() {
+/*$('select[name=selectorparameterSearch]').change(function() {
     valueSelectorParameterSearch = $(this).val()
     if(valueSelectorParameterSearch === "date"){
         $("#label-date-input").html("Date: ");
@@ -113,7 +115,7 @@ $('select[name=selectorparameterSearch]').change(function() {
         $("#dateInput").hide();
     }
     console.log($(this).val())
-});
+});*/
 //SEARCHING  GENERAL FUNCTION
 function searching(){
     searchParameter = $('#input-search').val();
@@ -169,6 +171,7 @@ async function searchingUserInCampus(locationCoordinates){
     }
 }
 function searchingOwnerDevice(){
+    console.log("value date:"+valueSelectorParameterSearch);
     if(valueSelectorParameterSearch === "date"){
         date = $("#dateInput").val();
         let dateUTC = new Date(date).toISOString();

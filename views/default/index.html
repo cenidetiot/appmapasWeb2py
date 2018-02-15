@@ -8,7 +8,7 @@
 
 {{block page_js}}
 <script src="{{=URL('static','js/searchWhere2.js')}}"></script>
-<script src="{{=URL('static','js/searchWhere1.js')}}"></script>
+<script src="{{=URL('static','js/searchWhere.js')}}"></script>
 {{end}}
 
 {{block header}}
@@ -48,7 +48,7 @@
             <input type="text" name="input-search" id="input-search" class="form-control">
             <label for="options-list" id="label-options-list"> Select a search parameter: </label>
             <select id="options-list" name="selectorparameterSearch" class="form-control">
-              <option value="" disabled selected>Select an option</option>
+              <option value="" disabled>Select an option</option>
               <<!--option value="date"> Date </option>-->
               <option value="dateTime" selected> Date and Time </option>
             </select>
