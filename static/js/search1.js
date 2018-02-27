@@ -1,5 +1,5 @@
 //Variables
-var valueSelectorSearch = "";
+var valueSelectorSearch1 = "";
 var valueSelectorParameterSearch = "";
 var date = "";
 var dateTime = "";
@@ -8,21 +8,14 @@ var locationCoordinates = [];
 var campus = [];
 var campusData;
 var campusLocation = [];
-var map,map2,map3;
+var campusLatitude;
+var campusLongitude;
 var isOnCampus = false;
 
 //HIDE ELEMNTS
 //$("#dateTimeInput").show();
 $("#FormGroup2").hide();
 
-/*$("#was").click (function hideFormGroup1(event){
-    event.preventDefault();
-    $("#FormGroup2").hide();
-    $("#FormGroup1").show();
-});
-$("#are").click (function hideFormGroup2(){
-    event.preventDefault();
-});*/
 //SELECTOR CHANGE VALUE: NAME=SELECTOR SEARCH
 $('select[name=optionsView]').change(function() {
     let value = $(this).val()
@@ -45,7 +38,7 @@ map = L.map("mapid").setView([0,0], 2);
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
-
+$
 //GET ALL CAMPUS REGISTERED
 $.get("https://driving-monitor-service.herokuapp.com/api/campus", function(data){
     if(data.length===0){
@@ -61,6 +54,7 @@ $.get("https://driving-monitor-service.herokuapp.com/api/campus", function(data)
         });
     }
 });
+
 //SELECTOR CHANGE VALUE: NAME=SELECTOR ZONE
 $('select[name=selectorZone]').change(function() {
     let idCampus = $(this).val()
@@ -72,8 +66,8 @@ $('select[name=selectorZone]').change(function() {
         else{
             campusData = data;
             campusLocation = data['location'];
-            let campusLatitude = data['pointMap'][0]['latitude'];
-            let campusLongitude = data['pointMap'][0]['longitude'];
+            campusLatitude = data['pointMap'][0]['latitude'];
+            campusLongitude = data['pointMap'][0]['longitude'];
             map.remove();
             map = L.map("mapid").setView([campusLatitude,campusLongitude], 19);
             L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -85,17 +79,17 @@ $('select[name=selectorZone]').change(function() {
 });
 
 //SELECTOR CHANGE VALUE: NAME=SELECTOR SEARCH
-$('select[name=selectorSearch]').change(function() {
+$('select[name=selectorSearch1]').change(function() {
 
-    valueSelectorSearch = $(this).val()
-    if(valueSelectorSearch==="idDevice"){
-        $("#label-input-search").html("ID Device: ");
+    valueSelectorSearch1 = $(this).val()
+    if(valueSelectorSearch1==="idDevice"){
+        $("#label-input-search1").html("ID Device: ");
     }
-    else if(valueSelectorSearch==="owner"){
-        $("#label-input-search").html("Owner: ");
+    else if(valueSelectorSearch1==="owner"){
+        $("#label-input-search1").html("Owner: ");
     }
-    else if(valueSelectorSearch==="username"){
-        $("#label-input-search").html("Username: ");
+    else if(valueSelectorSearch1==="username"){
+        $("#label-input-search1").html("Username: ");
     }
     console.log($(this).val())
 });
@@ -117,17 +111,17 @@ console.log("value select date: "+valueSelectorParameterSearch);
     console.log($(this).val())
 });*/
 //SEARCHING  GENERAL FUNCTION
-function searching(){
-    searchParameter = $('#input-search').val();
+function searching1(){
+    searchParameter = $('#input-search1').val();
     console.log(searchParameter);
     if(searchParameter!=null){
-        if(valueSelectorSearch==="idDevice"){
+        if(valueSelectorSearch1==="idDevice"){
             searchingIDDevice();
         }
-        else if(valueSelectorSearch==="owner"){
+        else if(valueSelectorSearch1==="owner"){
             searchingOwnerDevice();
         }
-        else if(valueSelectorSearch==="username"){
+        else if(valueSelectorSearch1==="username"){
             searchingUsername();
         }
     }
@@ -158,11 +152,6 @@ async function searchingUserInCampus(locationCoordinates){
         }
     }); 
     console.log(isOnCampus);
-   /* $.post("",query,function(data, status){
-        window.isOnCampus = data['isOnCampus'];
-        console.log(data['isOnCampus']);       
-    });
-    console.log(window.isOnCampus);*/
     if(isOnCampus){
         return true;
     }
@@ -200,14 +189,6 @@ function searchingOwnerDevice(){
                         console.log("El usuario con id: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
                     }   
                  })
-                //console.log(recibi);
-                /*if(recibi){
-                    showMap(locationCoordinates, dataReceived);
-                }
-                else{
-                    alert("El usuario con id: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
-                    console.log("El usuario con id: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
-                } */ 
             }
         });
     }
@@ -285,14 +266,7 @@ function searchingIDDevice(){
                         alert("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
                         console.log("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
                     }     
-                })
-                /*if(searchingUserInCampus(locationCoordinates)){
-                    showMap(locationCoordinates, dataReceived);
-                }
-                else{
-                    alert("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
-                    console.log("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha: "+date);
-                }          */ 
+                }) 
             }
         });
     }
@@ -327,14 +301,7 @@ function searchingIDDevice(){
                         alert("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha y hora especificada: "+dateTime);
                         console.log("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha y hora especificada: "+dateTime);
                     }    
-                })
-                /*if(searchingUserInCampus(locationCoordinates)){
-                    showMap(locationCoordinates, dataReceived);
-                }
-                else{
-                    alert("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha y hora especificada: "+dateTime);
-                    console.log("El usuario con idDevice: "+searchParameter+" no se encontró en la zona del campus especificado en la fecha y hora especificada: "+dateTime);
-                }*/           
+                }) 
             }
         });     
     }
@@ -366,7 +333,19 @@ function searchingUsername(){
 function showMap(location, dataReceived){
     console.log(location);
     let data = JSON.parse(dataReceived);
+    console.dir(data);
+    //===============================DATE BLOCK====================================
+    //MEXICO TIMEZONE
+    moment.tz.add("America/Mexico_City|LMT MST CST CDT CWT|6A.A 70 60 50 50|012121232324232323232323232323232323232323232323232323232323232323232323232323232323232323232323232|-1UQF0 deL0 8lc0 17c0 10M0 1dd0 gEn0 TX0 3xd0 Jb0 6zB0 SL0 e5d0 17b0 1Pff0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 1fB0 WL0 1fB0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0|20e6");
+    //ZURICH TIMEZONE
+    //moment.tz.add("Europe/Zurich|CET CEST|-10 -20|01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010|-19Lc0 11A0 1o00 11A0 1xG10 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|38e4"):
+    let date = data['time_index'];
+    let dateUnFormatted = moment.tz(date,'America/Mexico_City');
+    // DATE ZÚRICH
+    //let dateUnFormatted = moment.tz(date,'Europe/Zurich');
+    let dateFormated = dateUnFormatted.format();
 
+    console.log(dateFormated);
     map.remove();
     map = L.map("mapid").setView(location, 19);
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -374,9 +353,7 @@ function showMap(location, dataReceived){
     }).addTo(map);
     polyline = L.polyline(campusData.location).addTo(map);
     /*var editableLayers = new L.FeatureGroup();
-
     map3.addLayer(editableLayers);
-
     var drawControl = new L.Control.Draw({
         position: 'topleft',
         draw: {
@@ -407,8 +384,8 @@ function showMap(location, dataReceived){
         }
     });
     map.addControl(drawControl);*/
-
+    $("#text-whowascard").html("ID device: "+data['entity_id']+'<br> Owner: '+data['owner']+'<br> DateTime: '+dateFormated);
     L.marker(location).addTo(map)
-        .bindPopup('idDevice: '+data['entity_id']+'<br> Owner: '+data['owner'])
+        .bindPopup('idDevice: '+data['entity_id']+'<br> Owner: '+data['owner']+'<br> DateTime: '+dateFormated)
         .openPopup();
 }

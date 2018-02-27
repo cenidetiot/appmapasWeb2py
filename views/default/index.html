@@ -7,8 +7,11 @@
 {{end}} 
 
 {{block page_js}}
-<script src="{{=URL('static','js/searchWhere1.js')}}"></script>
-<script src="{{=URL('static','js/searchWhere.js')}}"></script>
+<script src="{{=URL('static','js/moment.js')}}"></script>
+<script src="{{=URL('static','js/moment-timezone.js')}}"></script>
+<script src="{{=URL('static','js/luxon.min.js')}}"></script>
+<script src="{{=URL('static','js/search1.js')}}"></script>
+<script src="{{=URL('static','js/search2.js')}}"></script>
 {{end}}
 
 {{block header}}
@@ -34,56 +37,66 @@
       <div class="form-group" id="FormGroup1">
         <h2>Who was in the institution?</h2>
           <form method="GET" action="javascript:void(0);">
-            <label for="select-search-zone"> Select the campus: </label>
+            <label for="select-search-zone"> Select the Campus: </label>
             <select id="select-search-zone" name="selectorZone" class="form-control">
               <option value="" disabled selected>Select an option</option>
             </select>
-            <label for="options-search-user"> Search a user by: </label>
-            <select id="options-search-user" name="selectorSearch" class="form-control">
+            <label for="options-search-user1"> Search a user by: </label>
+            <select id="options-search-user1" name="selectorSearch1" class="form-control">
               <option value="idDevice" selected> ID Device </option>
               <option value="owner"> Owner Device </option>
               <option value="username"> Username </option>
             </select>
-            <label for="input-search" id="label-input-search">ID Device: </label>
-            <input type="text" name="input-search" id="input-search" class="form-control">
+            <label for="input-search1" id="label-input-search1">ID Device: </label>
+            <input type="text" name="input-search1" id="input-search1" class="form-control">
             <label for="options-list" id="label-options-list"> Select a search parameter: </label>
             <select id="options-list" name="selectorparameterSearch" class="form-control">
               <option value="" disabled>Select an option</option>
               <<!--option value="date"> Date </option>-->
               <option value="dateTime" selected> Date and Time </option>
             </select>
-            <label for="dateInput" id="label-date-input">Date: </label>
+            <label for="dateInput" id="label-date-input">DateTime: </label>
             <!--<input type="date" name="date" id="dateInput" class="form-control">-->
             <input type="datetime-local" name="dateTime" id="dateTimeInput" class="form-control">
             <br>
-            <button type="button" id="query" onclick="searching()" class="btn btn-outline-success col-12"> Consult </button>
+            <button type="button" id="query" onclick="searching1()" class="btn btn-outline-success col-12"> Consult </button>
           </form>
+          <br>
+          <div class="card text-center" style="width: 26rem;">
+            <div class="card-block">
+              <h4 class="card-title">User Data: </h4>
+              <p class="card-text" id="text-whowascard"></p>
+            </div>
+          </div>
         </div>
         <div class="form-group" id="FormGroup2">
-          <h2>Who are inside in the institution?</h2>
+          <h2>Who are in the institution?</h2>
           <div class="form-group">
             <label for="campuslist">Select the Campus: </label>
             <select class="form-control" id="campuslist" name="campuslist">
-              <option>Choose the campus...</option>
+              <option> Select an option </option>
             </select>
           </div>
-          <label for="device">Search by Device ID</label>
-          <input type="text" class="form-control" id="idDevice" placeholder="Search by Device ID">
-          <button class="btn btn-primary" id="deviceButton">Search</button>
+          <label for="options-search-user2"> Search a user by: </label>
+          <select id="options-search-user2" name="selectorSearch2" class="form-control">
+            <option value="idDevice" selected> ID Device </option>
+            <option value="owner"> Owner Device </option>
+            <option value="username"> Username </option>
+          </select>
+          <label for="input-search2" id="label-input-search2">ID Device: </label>
+          <input type="text" name="input-search2" id="input-search2" class="form-control">
           <br>
+          <button type="button" id="query" onclick="searching2()" class="btn btn-outline-success col-12"> Consult </button>
           <br>
-          <label for="exampleFormControlInput1">Search by user ID</label>
-          <input type="email" class="form-control" id="userid" placeholder="Example : User:41">
-          <button class="btn btn-primary" id="userIdButton" >Search</button>
-          <br>
-          <br>
-          <label for="exampleFormControlInput1">Search by user name</label>
-          <input type="email" class="form-control" id="name" placeholder="Example : Daniel Torres">
-          <button class="btn btn-primary" id="nameButton" >Search</button>
-          <br>
-          <br>
+          <div class="card text-center" style="width: 26rem;">
+            <div class="card-block">
+              <h4 class="card-title">User Data: </h4>
+              <p class="card-text" id="text-whoarecard"></p>
+            </div>
+          </div>
         </div>
       </div>
+      <br>
       <div class="col-sm-8">
         <h2 class="text-center"> Institution Map</h2>
         <div id="mapid">
