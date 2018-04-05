@@ -4,10 +4,6 @@
 # this file is released under public domain and you can use without limitations
 # -------------------------------------------------------------------------
 
-# ---- example index page ----
-def index():
-    #response.flash = T("Hello World")
-    return dict(message = T('Institution Map'))
 # ---- API (example) -----
 @auth.requires_login()
 def api_get_user_email():
@@ -55,3 +51,12 @@ def download():
     http://..../[app]/default/download/[filename]
     """
     return response.download(request, db)
+
+def index():
+    return dict(message = T('Hello'))
+
+def alerts():
+    return dict(message = T('Hello'))
+
+def delimitation():
+    return dict(message = T('Hello'))

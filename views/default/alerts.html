@@ -1,0 +1,21 @@
+{{extend 'layout.html'}}
+
+
+{{block header}}
+<center style="background-color: #333; color:white; padding:30px">
+  <h1> Maps Application </h1>
+</center>
+{{end}}
+<ul class="nav justify-content-center">
+    <li class="nav-item">
+      <a class="nav-link" href="{{=URL('default','index')}}">User Devices</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{{=URL('default','alerts')}}">Alerts</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{{=URL('default','delimitation')}}">Zones/Subzones Delimitation</a>
+    </li>
+</ul>
+
+<h2>Alerts</h2>

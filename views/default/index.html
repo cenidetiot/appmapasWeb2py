@@ -19,7 +19,18 @@
   <h1> Maps Application </h1>
 </center>
 {{end}}
-<!-- As a link -->
+<ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a class="nav-link" href="{{=URL('default','index')}}">User Devices</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{=URL('default','alerts')}}">Alerts</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{=URL('default','delimitation')}}">Zones/Subzones Delimitation</a>
+  </li>
+</ul>
+
 <div class="form-group">
   <label for="campuslist">Select an option view: </label>
   <select class="form-control" id="optionsView" name="optionsView">
@@ -29,9 +40,6 @@
   </select>
 </div>
 
-{{if 'message' in globals():}}
-
-<div class="">
   <div class="row">
     <div class="col-sm-4" >
       <div class="form-group" id="FormGroup1">
@@ -52,7 +60,7 @@
             <label for="options-list" id="label-options-list"> Select a search parameter: </label>
             <select id="options-list" name="selectorparameterSearch" class="form-control">
               <option value="" disabled>Select an option</option>
-              <<!--option value="date"> Date </option>-->
+              <!--option value="date"> Date </option>-->
               <option value="dateTime" selected> Date and Time </option>
             </select>
             <label for="dateInput" id="label-date-input">DateTime: </label>
@@ -69,24 +77,27 @@
             </div>
           </div>
         </div>
+        <!--WHO ARE IN THE INSTITUTION-->
         <div class="form-group" id="FormGroup2">
           <h2>Who are in the institution?</h2>
-          <div class="form-group">
-            <label for="campuslist">Select the Campus: </label>
-            <select class="form-control" id="campuslist" name="campuslist">
-              <option> Select an option </option>
+          <form method="GET" action="javascript:void(0);">
+            <div class="form-group">
+              <label for="campuslist">Select the Campus: </label>
+              <select class="form-control" id="campuslist" name="campuslist">
+                <option> Select an option </option>
+              </select>
+            </div>
+            <label for="options-search-user2"> Search a user by: </label>
+            <select id="options-search-user2" name="selectorSearch2" class="form-control">
+              <option value="idDevice" selected> ID Device </option>
+              <option value="owner"> Owner Device </option>
+              <option value="username"> Username </option>
             </select>
-          </div>
-          <label for="options-search-user2"> Search a user by: </label>
-          <select id="options-search-user2" name="selectorSearch2" class="form-control">
-            <option value="idDevice" selected> ID Device </option>
-            <option value="owner"> Owner Device </option>
-            <option value="username"> Username </option>
-          </select>
-          <label for="input-search2" id="label-input-search2">ID Device: </label>
-          <input type="text" name="input-search2" id="input-search2" class="form-control">
-          <br>
-          <button type="button" id="query" onclick="searching2()" class="btn btn-outline-success col-12"> Consult </button>
+            <label for="input-search2" id="label-input-search2">ID Device: </label>
+            <input type="text" name="input-search2" id="input-search2" class="form-control">
+            <br>
+            <button type="button" id="query" onclick="searching2()" class="btn btn-outline-success col-12"> Consult </button>
+          </form>
           <br>
           <div class="card text-center" style="width: 26rem;">
             <div class="card-block">
@@ -95,6 +106,7 @@
             </div>
           </div>
         </div>
+        <!-- END WHO ARE IN THE INSTITUTION-->
       </div>
       <br>
       <div class="col-sm-8">
@@ -103,14 +115,6 @@
         </div>
       </div>
     </div>
-  </div>
-      
-
-{{elif 'content' in globals():}}
-{{=content}}
-{{else:}}
-{{=BEAUTIFY(response._vars)}}
-{{pass}}
 
 
 
