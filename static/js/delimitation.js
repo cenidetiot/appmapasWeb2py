@@ -154,15 +154,15 @@ function saveZone(){
     let zone = {
         name: $("#zone-name").val(),
         address:  $("#InputAddressZone").val(),
-        category: $('select[name=categories-list]').val(),
+        category: JSON.stringify($('select[name=categories-list]').val()),
         description: $('#InputDescriptionZone').val(),
-        centerPoint: pointMap,
-        location: coordinatesConverted
+        centerPoint: JSON.stringify(pointMap),
+        location: JSON.stringify(coordinatesConverted)
     };
     console.log(zone);
     $.ajax({  
         url:'http://localhost:4005/api/zone',
-        data: JSON.stringify(zone),
+        data: zone,
         type:'POST',
         dataType: "json",
         success:function(respuesta) {   
