@@ -160,15 +160,26 @@ function saveZone(){
         location: coordinatesConverted
     };
     console.log(zone);
-    $.ajax({  
+
+    fetch("http://localhost:4005/api/zone", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body : JSON.stringify(zone)
+    })
+    .then((respuesta) => {
+        console.log(respuesta);
+    })
+    /*$.ajax({  
         url:'http://localhost:4005/api/zone',
-        data: JSON.stringify(zone),
+        data: {body : )},
         type:'POST',
         dataType: "json",
         success:function(respuesta) {   
             console.log(respuesta);
         }
-    }); 
+    }); */
 }
 function saveSubzone(){
     return;
