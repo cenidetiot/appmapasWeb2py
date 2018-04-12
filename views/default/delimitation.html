@@ -1,7 +1,7 @@
 {{extend 'layout.html'}}
 
 {{block head}}
-<link rel="stylesheet" href="{{=URL('static','css/estilosApp.css')}}"/>
+<link rel="stylesheet" href="{{=URL('static','css/estilos.css')}}"/>
 <link rel="stylesheet" href="{{=URL('static','css/leaflet.css')}}"/>
 <link rel="stylesheet" href="{{=URL('static','css/leafletDraw.css')}}"/>
 {{end}} 
@@ -24,63 +24,72 @@
       <a class="nav-link" href="{{=URL('default','alerts')}}">Alerts</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{{=URL('default','delimitation')}}">Zones/Subzones Delimitation</a>
+      <a class="nav-link" href="{{=URL('default','delimitation')}}">Areas Delimitation</a>
     </li>
 </ul>
+<br>
+<h2>Areas Delimitation</h2>
+<br>
 
-<div class="form-group">
+<div class="form-group row">
     <label for="campuslist">Select an option view: </label>
     <select class="form-control" id="optionsView" name="optionsView">
-      <option value="" disabled selected> Select an option of view </option>
-      <option value="zones"> Zones Delimitation </option>
+      <option value="" disabled > Select an option of view </option>
+      <option value="zones" selected> Zones Delimitation </option>
       <option value="subzones"> Subzones Delimitation </option>
     </select>
 </div>
 
 <div class="row">
-    <div class="col-sm-4" >
+    <div class="col-sm-4 card">
         <div class="form-group" id="FormGroup1">
-            <h2>Delimite Zones</h2>
+            <div class="card-header">
+                <h4 class="text-center"> Zones Delimitation</h4>
+            </div>
             <form method="GET" action="javascript:void(0);">
                 <!-- Zone name-->
-                <label for="zone-name"> Zone name: </label>
-                <input type="text" name="zoneName" id="zone-name" class="form-control text-center">
+                <div class="form-group">
+                    <label for="zoneName"> Zone name: </label>
+                    <input type="text" name="zoneName" id="zoneName" class="form-control text-center">
+                </div>
                 <!-- Categories -->
-                <label for="categories"> Categories name: </label>
-                <select id="categories" name="categories-list" class="form-control" multiple>
-                    <option value="" disabled>Choose one or more options..</option>
-                    <option value="category1" selected> category1 </option>
-                    <option value="category2"> category2 </option>
-                    <option value="category3"> category3 </option>
-                </select>
+                <div class="form-group">
+                    <label for="zoneCategories"> Categories name: </label>
+                    <select id="zoneCategories" name="zoneCategories" class="form-control" multiple>
+                        <option value="" disabled>Choose one or more options..</option>
+                        <option value="category1" selected> category1 </option>
+                        <option value="category2"> category2 </option>
+                        <option value="category3"> category3 </option>
+                    </select>
+                </div>
                 <!---->
                 <!-- Address's Zone -->
                 <div class="form-group">
-                    <label for="InputAddressZone">Address's Zone: </label>
-                    <textarea class="form-control text-center" id="InputAddressZone" placeholder="Insert the address of the zone" required rows="6"></textarea>
+                    <label for="zoneAddress">Address's Zone: </label>
+                    <textarea class="form-control text-center" id="zoneAddress" placeholder="Insert the address of the zone" required rows="6"></textarea>
                 </div>  
                 <div class="form-group row">   
                     <div class="col-7">
-                        <button type="button" class="col-12 btn btn-success btn-rounded text-center" onclick="searchAddress()">Search Address on Map</button>
+                        <button type="button" class="btn btn-outline-info col-12" onclick="searchAddress()">Search Address on Map</button>
                     </div>  
                     <div class="col-5">
-                        <button type="button" class="col-12 btn btn-warning btn-rounded text-center" onclick="clearAddress()">Clear Address</button>
+                        <button type="button" class="btn btn-outline-danger col-12" onclick="clearAddress()">Clear Address</button>
                     </div>      
                 </div> 
                 <!-- End Address's Zone-->
                 <!-- Description Input-->
                 <div class="form-group basic-textarea">
-                    <label for="InputDescriptionZone"> Zone Description: </label>
-                    <textarea class="form-control text-center" id="InputDescriptionZone" placeholder="Brief description of the zone" required rows="4"></textarea>
+                    <label for="zoneDescription"> Zone Description: </label>
+                    <textarea class="form-control text-center" id="zoneDescription" placeholder="Brief description of the zone" required rows="4"></textarea>
                 </div>  
                 <!-- End Description Input-->
                 <br>
                 <div class="form-group row">   
                     <div class="col-6">
-                        <button type="button" id="query" onclick="saveZone()" class="btn btn-outline-info col-12"> Save </button>
+                        <button type="button" id="query" onclick="saveZone()" class="col-12 btn btn-success btn-rounded text-center "> Save </button>
                     </div>
                     <div class="col-6">
-                        <button type="button" id="query" onclick="clearInputs()" class="btn btn-outline-danger col-12"> Cancel </button>
+                        <button type="button" id="query" onclick="clearInputsZone()" class="col-12 btn btn-warning btn-rounded text-center"> Cancel </button>
                     </div>
                 </div>
             </form>
@@ -88,37 +97,44 @@
         </div>
         <!--SUBZONES-->
         <div class="form-group" id="FormGroup2">
-            <h2>Delimite subzones</h2>
+            <div class="card-header">
+                <h4 class="text-center"> Subzones Delimitation</h4>
+            </div>
             <form method="GET" action="javascript:void(0);">
                 <!-- Subzone name-->
-                <label for="zone-name"> Subzone name: </label>
-                <input type="text" name="zoneName" id="zone-name" class="form-control text-center">
+                <div class="form-group">   
+                    <label for="subzoneName"> Subzone name: </label>
+                    <input type="text" name="subzoneName" id="subzoneName" class="form-control text-center">
+                </div>
                 <!-- Subzone Categories -->
-                <label for="categories"> Subzone Categories name: </label>
-                <select id="categories" name="categories-list" class="form-control" multiple>
-                <option value="category1" selected> category1 </option>
-                <option value="category2"> category2 </option>
-                <option value="category3"> category3 </option>
-                </select>
+                <div class="form-group">   
+                    <label for="subzoneCategories"> Subzone Categories name: </label>
+                    <select id="subzoneCategories" name="subzoneCategories" class="form-control" multiple>
+                        <option value="category1" selected> category1 </option>
+                        <option value="category2"> category2 </option>
+                        <option value="category3"> category3 </option>
+                    </select>
+                </div>
                 <!---->
                 <!--Zone Reference-->
-                <label for="zone-reference"> Select the Zone of this subzone: </label>
-                <select id="zone-reference" name="zone-reference" class="form-control">
-                  <option value="" disabled selected>Select an option</option>
-                </select>
+                <div class="form-group">   
+                    <label for="zoneReference"> Select the Zone of this subzone: </label>
+                    <select id="zoneReference" name="zoneReference" class="form-control">
+                        <option value="" disabled selected>Select an option</option>
+                    </select>
+                </div>
                 <!-- Description Input-->
                 <div class="form-group basic-textarea">
-                    <label for="InputDescriptionZone"> Subzone Description: </label>
-                    <textarea class="form-control text-center" id="InputDescriptionZone" placeholder="Brief description of the subzone" required rows="4"></textarea>
+                    <label for="subzoneDescription"> Subzone Description: </label>
+                    <textarea class="form-control text-center" id="subzoneDescription" placeholder="Brief description of the subzone" required rows="4"></textarea>
                 </div>  
                 <!-- End Description Input-->
-                <br>
                 <div class="form-group row">   
                     <div class="col-6">
-                        <button type="button" id="query" onclick="saveSubzone()" class="btn btn-outline-info col-12"> Save </button>
+                        <button type="button" id="query" onclick="saveSubzone()" class="col-12 btn btn-success btn-rounded text-center"> Save </button>
                     </div>
                     <div class="col-6">
-                        <button type="button" id="query" onclick="clearInputs()" class="btn btn-outline-danger col-12"> Cancel </button>
+                        <button type="button" id="query" onclick="clearInputsSubzone()" class="col-12 btn btn-warning btn-rounded text-center"> Cancel </button>
                     </div>
                 </div>
             </form>
@@ -133,12 +149,12 @@
         </div>
         <br>
         <!--- CARD DATA -->
-        <div class="card text-center">
+        <!--<div class="card text-center">
             <div class="card-block">
                 <h4 class="card-title"> Data: </h4>
                 <p class="card-text" id="text-whowascard"></p>
             </div>
-        </div>
+        </div>-->
         <!--END CARD DATA -->
     </div>
 </div>

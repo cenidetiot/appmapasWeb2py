@@ -10,6 +10,7 @@ $('select[name=optionsView]').change(function() {
     else if(value==="subzones"){
         $("#FormGroup1").hide();
         $("#FormGroup2").show();
+        searchZones();
     }
     else if(value === ""){
         alert("Select an option view");
@@ -17,14 +18,15 @@ $('select[name=optionsView]').change(function() {
     console.log($(this).val())
 });
 
-var map = L.map("mapid").setView([18.876551, -99.220100], 20);
+// INITIALIZATION OF THE MAP
+var map = L.map("mapid").setView([0, -0], 2);
 
 // LEAFLET STYLE ON THE MAP 
 /*L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 */
-// MAPBOX STYLE ON MAP
+// MAPBOX STYLE ON THE MAP
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiaGFpZGVlIiwiYSI6ImNqOXMwenczMTBscTIzMnFxNHVyNHhrcjMifQ.ILzRx4OtBRK7az_4uWQXyA', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 20,
@@ -36,6 +38,7 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
 var coordinatesConverted = []; 
 var polylineArrayCoordinates = [];
 var pointMap = [];
+var idZoneSelected;
 var editableLayers = new L.FeatureGroup();
 
 map.addLayer(editableLayers);
@@ -72,9 +75,7 @@ var drawControl = new L.Control.Draw({
 });
 map.addControl(drawControl);
 
-L.marker([18.876551, -99.220100]).addTo(map)
-    .bindPopup('CENIDET.<br> CAMPUS PALMIRA.')
-    .openPopup();
+//FUNCTION TO CONTROLS THE DRAWING OF A SHAPE.
 
 map.on('draw:created', function (e) {
    var type = e.layerType;
@@ -89,8 +90,8 @@ map.on('draw:created', function (e) {
         console.log("CREANDO POLÍGONO");
         var polygon = layer.toGeoJSON();
         var polygonCoordinates = polygon['geometry']['coordinates'];
-
         //CONVERT COORDINATES [LON,LAT] GeoJSON IN [LAT,LON] COORDINATES.
+        coordinatesConverted = [];
         for(let i=0; i<polygonCoordinates.length;i++){
           for(let j=0; j<polygonCoordinates[i].length;j++){
             coordinatesConverted.push([polygonCoordinates[i][j][1],polygonCoordinates[i][j][0]]);         
@@ -118,58 +119,144 @@ map.on('draw:created', function (e) {
    editableLayers.addLayer(layer);
    //drawnItems.addLayer(layer);
 });
+//FUNCTION TO SEARCH THE ADDRESS SPECIFIED.
 function searchAddress(){
     //REQUEST GOOGLE GEOCODE API SERVICE
-    $.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent($("#InputAddressZone").val()) + "&key=AIzaSyDCflB_l_yiXG9F29g65Q33boBrCJTepmM", function(data){
-        if(data.length===0){
-            console.log("Anything answer");
+    $.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent($("#zoneAddress").val()) + "&key=AIzaSyDCflB_l_yiXG9F29g65Q33boBrCJTepmM", function(data){
+        if (data.status !== "OK") { 
+            throw new Error("Unable to geocode address"); 
         }
         else{
-            console.log(data);
-            if (data.status !== "OK") { throw new Error("Unable to geocode address"); }
-            else{
-                pointMap[0] = data.results[0].geometry.location.lat;
-                pointMap[1] = data.results[0].geometry.location.lng;
-                console.log(pointMap)
-                return;
-            }            
+            pointMap[0] = data.results[0].geometry.location.lat;
+            pointMap[1] = data.results[0].geometry.location.lng;
+            console.log(pointMap)
+            //COMMENT- map.setView() immediately set the new view to the desired location/zoom level.
+            map.setView(new L.LatLng(pointMap[0], pointMap[1]), 18);
+            //COMMENT- map.panTo() will pan to the location with zoom/pan animation
+            //map.panTo(new L.LatLng(pointMap[0], pointMap[1]));
+            return;            
         }
     });
     if(pointMap){
         return pointMap;
-    }
+    }  
 }
+function searchZones(){
+    fetch("https://smartsecurity-webservice.herokuapp.com/api/zone", {
+        method: 'GET',
+        headers: {
+            'Access-Control-Allow-Methods':'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+        },
+    })
+    .then((res) => res.json())
+    .then((data)=> {
+        console.dir(data)    
+        data.forEach(element =>{
+            $('#zoneReference').append($('<option>', {
+                value: element['idZone'],
+                text: element['name']
+            })); 
+        })
+    })
+}
+$('#zoneReference').change(function() {
+    idZoneSelected = $(this).val()
+    //GET ALL INFORMATION OF A SPECIFIC ZONE
+    fetch("https://smartsecurity-webservice.herokuapp.com/api/zone/"+idZoneSelected, {
+        method: 'GET',
+        headers: {
+            'Access-Control-Allow-Methods':'GET'
+        },
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data);
+        map.setView(new L.LatLng(data['centerPoint'][0], data['centerPoint'][1]), 18);
+        polyline = L.polyline(data['location'], {color: '#ff6666'}).addTo(map);
+    })
+});
+// FUNCTION TO CLEAR THE ADDRESS INPUT OF ZONE
 function clearAddress(){
-    $("#InputAddressZone").val("");    
+    $("#zoneAddress").val("");    
+    map.setView(new L.LatLng(0,0), 2);
     return;
 }
-function clearInputs(){
-    $("#zone-name").val("");
-    $("#InputAddressZone").val("");    
-    $('select[name=categories-list]').val("select an option");
-    $('#InputDescriptionZone').val("");
+//FUNCTION TO CLEAR THE ALL THE INPUTS OF ZONE  
+function clearInputsZone(){
+    $("#zoneName").val("");
+    $("#zoneAddress").val("");    
+    $('select[name=zoneCategories]').val("select an option");
+    $('#zoneDescription').val("");
+    map.setView(new L.LatLng(0,0), 2);
     return;
 }
+// FUNCTION TO CLEAR ALL THE INPUTS OF SUBZONE
+function clearInputsSubzone(){
+    $("#subzoneName").val("");
+    $("select[name=subzoneCategories]").val("");
+    $("#subzoneDescription").val("");
+    map.setView(new L.LatLng(0,0), 2);
+    return;
+}
+// FUNCTION TO SAVE THE ZONE INFORMATION
 function saveZone(){
     let zone = {
-        name: $("#zone-name").val(),
-        address:  $("#InputAddressZone").val(),
-        category: JSON.stringify($('select[name=categories-list]').val()),
-        description: $('#InputDescriptionZone').val(),
-        centerPoint: JSON.stringify(pointMap),
-        location: JSON.stringify(coordinatesConverted)
+        name: $("#zoneName").val(),
+        address:  $("#zoneAddress").val(),
+        category: $('select[name=zoneCategories]').val(),
+        description: $('#zoneDescription').val(),
+        centerPoint: pointMap,
+        location: coordinatesConverted
     };
     console.log(zone);
-    $.ajax({  
-        url:'http://localhost:4005/api/zone',
-        data: zone,
-        type:'POST',
-        dataType: "json",
-        success:function(respuesta) {   
-            console.log(respuesta);
+    fetch("https://smartsecurity-webservice.herokuapp.com/api/zone", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Methods':'POST'
+        },
+        body : JSON.stringify(zone)
+    })
+    .then((respuesta) => {
+        if(respuesta.status != 201){
+            alert("An error has ocurred to save the subzone entity");
         }
-    }); 
+        else{
+            console.log(respuesta);
+            alert("Zone save successfully");
+            clearInputsZone();
+        }
+    })
+    return;
 }
+//FUCNTION TO SAVE THE SUBZONE INFORMATION.
 function saveSubzone(){
+    let subzone = {
+        name: $("#subzoneName").val(),
+        category: $("select[name=subzoneCategories]").val(),
+        location: coordinatesConverted,
+        refZone: idZoneSelected,
+        description: $("#subzoneDescription").val()
+    }
+    //console.log(subzone);
+
+    fetch("https://smartsecurity-webservice.herokuapp.com/api/subzone", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Methods':'POST'
+        },
+        body : JSON.stringify(subzone)
+    })
+    .then((respuesta) => {
+        if(respuesta.status != 201){
+            alert("An error has ocurred to save the subzone entity");
+        }
+        else{
+            console.log(respuesta);
+            console.log("Subzone save successfully");
+            clearInputsSubzone();   
+        }
+    })
     return;
 }

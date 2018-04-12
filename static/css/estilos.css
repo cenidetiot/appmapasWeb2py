@@ -1,0 +1,23 @@
+#mapid{ 
+    height: 500px; 
+}
+ul {
+    list-style-type: none;
+    width: 100%;
+    background-color: #e7e7e7;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    color: black;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+    background-color: #008CBA;
+    color: black;
+}
