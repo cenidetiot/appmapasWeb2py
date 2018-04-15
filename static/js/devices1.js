@@ -79,11 +79,13 @@ function searching1(){
     phonenumber = $('#phonenumber-input').val();
     console.log(phonenumber);
     searchUserInfo(phonenumber);
-    //console.log(idUser);
-    /*$.get("https://smartsecurity-webservice.herokuapp.com/crate/locationOwnerDateTime?owner="+idUser+"&date="+date+"&time="+hour, function(data){
+    return;
+}
+/*function searchUser(userData){
+    $.get("https://smartsecurity-webservice.herokuapp.com/crate/locationOwnerDateTime?owner="+userData['id']+"&date="+date+"&time="+hour, function(data){
         if(data.length===0){
-            console.log("No se encontraron registros con el Usuario: "+idUser+"en la fecha y hora especificados: "+dateTime);
-            alert("No se encontraron registros con el Usuario:: "+idUser+"en la fecha y hora especificados: "+dateTime);
+            console.log("No se encontraron registros con el Usuario: "+userData['id']+"en la fecha y hora especificados: "+dateTime);
+            alert("No se encontraron registros con el Usuario:: "+userData['id']+"en la fecha y hora especificados: "+dateTime);
         }
         else{
             let searchUserinCampus = searchingUserInCampus(data['location']);
@@ -99,49 +101,54 @@ function searching1(){
                 }    
             }) 
         }
-    }); */
-}
-
+    }); 
+}*/
 /*async function searchingUserInCampus(locationCoordinates){
-    console.log(locationCoordinates.join(","))
-    console.log(campusLocation.join(";"));
+    console.log(locationCoordinates)
+    console.log(zoneLocation);
     let query = {
-        point: locationCoordinates.join(","),
-        polygon: campusLocation.join(";")
-    }*/
-    /*let query = {
-        point: "18.879683, -99.221627",
-        polygon: "18.87995433844068,-99.2219396866858;18.87998986907176,-99.22182166948915;18.87991373199594,-99.22162855044007;18.87967516893432,-99.22142470255497;18.879385847318705,-99.22103846445683;18.879380771496425,-99.22088289633396;18.879243724236808,-99.22103310003877;18.87901531188834,-99.22112965956333;18.878832581785367,-99.22118866816163;18.87869045823416,-99.22120476141575;18.878553410409896,-99.22126377001405;18.878477272681298,-99.2213442362845;18.878665079015903,-99.22130132094026;18.878771671706748,-99.22146761789918;18.878898567678874,-99.22155344858766;18.879035615220808,-99.22143006697297;18.879137131846274,-99.22143006697297;18.879304634143818,-99.22147298231724;18.879395998962796,-99.22156417742372;18.87947721209341,-99.22164464369416;18.879680244747682,-99.22196114435792;18.879827443268194,-99.22200405970219;18.87995433844068,-99.2219396866858"
-    } */   
-    /*await $.ajax({  
-        url:'https://driving-monitor-service.herokuapp.com/api/pointCampus',
-        data: query,
-        type:'POST',
-        dataType: "json",
-        success:function (respuesta) {   
-            isOnCampus= respuesta.isOnCampus;
+        point: locationCoordinates,
+        polygon: zoneLocation
+    }
+    await fetch("https://smartsecurity-webservice.herokuapp.com/service/zone/point", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Methods':'POST'
+        },
+        body : JSON.stringify(query)
+    })
+    .then((respuesta) => {
+        if(respuesta.status != 201){
+            alert("An error has ocurred to search the user in the zone");
+        }
+        else{
+            console.log(respuesta);
+            isOnCampus = respuesta.isOnCampus;
             console.log(isOnCampus);
             return;
         }
-    }); 
+    })
     console.log(isOnCampus);
     if(isOnCampus){
         return true;
     }
     else{
         return false;
-    }
+    };
 }*/
 function searchUserInfo(phoneNumber){
+    console.log(phoneNumber);
     fetch("https://smartsecurity-webservice.herokuapp.com/api/user?phoneNumber="+phoneNumber, {
         method: 'GET',
         headers: {
-            'Access-Control-Allow-Methods':'GET'
+            'Access-Control-Allow-Methods':'GET, POST, OPTIONS, PUT, PATCH, DELETE'
         },
     })
     .then((res) => res.json())
     .then((data)=> {
         console.dir(data)   
+        //searchUser(data);
     })
 }
 

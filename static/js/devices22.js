@@ -36,12 +36,15 @@ function searching2(){
     fetch("https://smartsecurity-webservice.herokuapp.com/service/devices/zone/"+$("#zonelist").val()+"/owner?phoneNumber="+phone, {
         method: 'GET',
         headers: {
-            'Access-Control-Allow-Methods':'GET'
+            'Access-Control-Allow-Methods':'GET, POST, OPTIONS, PUT, PATCH, DELETE'
         },
     })
     .then((res) => res.json())
     .then((data)=> {
         console.dir(data)   
+    })
+    .catch((error)=>{
+        console.log(error);
     })
 }
 

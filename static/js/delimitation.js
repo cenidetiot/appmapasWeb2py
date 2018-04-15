@@ -119,6 +119,7 @@ map.on('draw:created', function (e) {
    editableLayers.addLayer(layer);
    //drawnItems.addLayer(layer);
 });
+
 //FUNCTION TO SEARCH THE ADDRESS SPECIFIED.
 function searchAddress(){
     //REQUEST GOOGLE GEOCODE API SERVICE
