@@ -11,7 +11,8 @@
 <script src="{{=URL('static','js/moment-timezone.js')}}"></script>
 <script src="{{=URL('static','js/luxon.min.js')}}"></script>
 <script src="{{=URL('static','js/devices1.js')}}"></script>
-<script src="{{=URL('static','js/devices22.js')}}"></script>
+<script src="{{=URL('static','js/devices2.js')}}"></script>
+<script src="{{=URL('static','js/devices3.js')}}"></script>
 {{end}}
 
 {{block header}}
@@ -33,15 +34,16 @@
 </ul>
 <br>
 
-<h2> User Devices History </h2>
+<h2> Users' Searching </h2>
 <br>
 
 <div class="form-group row">
-  <label for="campuslist">Select an option view: </label>
+  <label for="campuslist">Select an searching option: </label>
   <select class="form-control" id="optionsView" name="optionsView">
-    <option value="" disabled> Select an option of view </option>
-    <option value="who-was" selected> Who was in the zone institution? </option>
-    <option value="who-are"> Who are inside in the zone insitution? </option>
+    <option value="" disabled> Select an search option </option>
+    <option value="who-was" selected> Search 1: A user that was in a specific moment, in a institution's zone </option>
+    <option value="who-is"> Search 2: A User that is inside of an institution's zone </option>
+    <option value="devices-in-zone"> Search 3: All Users that are in a institution's zone </option>
   </select>
 </div>
 
@@ -50,17 +52,17 @@
       <!-- WHO WAS IN THE ZONE INSTITUTION-->
       <div class="form-group" id="FormGroup1">
         <div class="card-header">
-          <h4 class="text-center"> Who was in the zone institution?</h4>
+          <h4 class="text-center"> Search Of User 1 </h4>
         </div>
           <form method="GET" action="javascript:void(0);">
             <div class="form-group">
-              <label for="select-search-zone"> Select the Zone: </label>
-              <select id="select-search-zone" name="selectorZone" class="form-control">
+              <label for="zonelist1"> Select the Zone: </label>
+              <select id="zonelist1" name="zonelist1" class="form-control">
                 <option value="" disabled selected>Select an option</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="phone-number" id="label-input-search1">Phone Number: </label>
+              <label for="phone-number" id="label-input-search1">User's Phone Number: </label>
               <input type="text" name="input-search1" id="phonenumber-input" class="form-control">
             </div>
             <div class="form-group">
@@ -73,43 +75,47 @@
             </div>
             <button type="button" id="query" onclick="searching1()" class="col-12 btn btn-success btn-rounded text-center"> Consult </button>
           </form>
-          <br>
-          <!--<div class="card text-center" style="width: 26rem;">
-            <div class="card-block">
-              <h4 class="card-title">User Data: </h4>
-              <p class="card-text" id="text-whowascard"></p>
-            </div>
-          </div>-->
         </div>
         <!-- END WHO WAS IN THE ZONE INSTITUTION-->
-        <!--WHO ARE IN THE INSTITUTION-->
+        <!--WHO IS IN THE INSTITUTION-->
         <div class="form-group" id="FormGroup2">
           <div class="card-header">
-            <h4 class="text-center">Who is inside in the zone insitution?</h4>
+            <h4 class="text-center">Search of User 2</h4>
           </div>
           <form method="GET" action="javascript:void(0);">
             <div class="form-group">
-              <label for="zonelist">Select the zone: </label>
-              <select class="form-control" id="zonelist" name="zonelist">
+              <label for="zonelist2">Select the zone: </label>
+              <select class="form-control" id="zonelist2" name="zonelist2">
                 <option> Select an option </option>
               </select>
             </div>
             <div class="form-group">
-              <label for="input-search2" id="label-input-search2">Phone Number: </label>
+              <label for="input-search2" id="label-input-search2">User's Phone Number: </label>
               <input type="text" name="input-search2" id="input-search2" class="form-control">
             </div>
             <br>
             <button type="button" id="query" onclick="searching2()" class="col-12 btn btn-success btn-rounded text-center"> Consult </button>
           </form>
-          <br>
-          <!--<div class="card text-center" style="width: 26rem;">
-            <div class="card-block">
-              <h4 class="card-title">User Data: </h4>
-              <p class="card-text" id="text-whowascard"></p>
-            </div>
-          </div>-->
         </div>
-        <!-- END WHO ARE IN THE INSTITUTION-->
+        <!-- END WHO IS IN THE INSTITUTION-->
+        <!--All Devices that are in a Zone -->
+        <div class="form-group" id="FormGroup3">
+          <div class="card-header">
+            <h4 class="text-center"> Search of User 3 </h4>
+          </div>
+          <form method="GET" action="javascript:void(0);">
+            <div class="form-group">
+              <label for="zonelist3">Select the zone: </label>
+              <select class="form-control" id="zonelist3" name="zonelist3">
+                <option> Select an option </option>
+              </select>
+            </div>
+            <br>
+            <button type="button" id="query" onclick="searching3()" class="col-12 btn btn-success btn-rounded text-center"> Consult </button>
+          </form>
+          <br>
+        </div>
+        <!-- All Devices that are in a Zone -->
       </div>
       <br>
       <div class="col-sm-8">

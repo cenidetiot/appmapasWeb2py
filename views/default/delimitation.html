@@ -31,15 +31,6 @@
 <h2>Areas Delimitation</h2>
 <br>
 
-<!--<div class="form-group row">
-    <label for="campuslist">Select an option view: </label>
-    <select class="form-control" id="optionsView" name="optionsView">
-      <option value="" disabled > Select an option of view </option>
-      <option value="zones" selected> Zones Delimitation </option>
-      <option value="subzones"> Subzones Delimitation </option>
-    </select>
-</div>-->
-
 <div class="row">
     <div class="col-sm-4 card">
         <div class="form-group" id="FormGroup1">
@@ -52,17 +43,7 @@
                     <label for="zoneName"> Zone name: </label>
                     <input type="text" name="zoneName" id="zoneName" class="form-control text-center">
                 </div>
-                <!-- Categories -->
-                <div class="form-group">
-                    <label for="zoneCategories"> Categories name: </label>
-                    <select id="zoneCategories" name="zoneCategories" class="form-control" multiple>
-                        <option value="" disabled>Choose one or more options..</option>
-                        <option value="category1" selected> category1 </option>
-                        <option value="category2"> category2 </option>
-                        <option value="category3"> category3 </option>
-                    </select>
-                </div>
-                <!---->
+
                 <!-- Address's Zone -->
                 <div class="form-group">
                     <label for="zoneAddress">Address's Zone: </label>
@@ -95,52 +76,6 @@
             </form>
             <br>
         </div>
-        <!--SUBZONES-->
-        <div class="form-group" id="FormGroup2">
-            <div class="card-header">
-                <h4 class="text-center"> Subzones Delimitation</h4>
-            </div>
-            <form method="GET" action="javascript:void(0);">
-                <!-- Subzone name-->
-                <div class="form-group">   
-                    <label for="subzoneName"> Subzone name: </label>
-                    <input type="text" name="subzoneName" id="subzoneName" class="form-control text-center">
-                </div>
-                <!-- Subzone Categories -->
-                <div class="form-group">   
-                    <label for="subzoneCategories"> Subzone Categories name: </label>
-                    <select id="subzoneCategories" name="subzoneCategories" class="form-control" multiple>
-                        <option value="category1" selected> category1 </option>
-                        <option value="category2"> category2 </option>
-                        <option value="category3"> category3 </option>
-                    </select>
-                </div>
-                <!---->
-                <!--Zone Reference-->
-                <div class="form-group">   
-                    <label for="zoneReference"> Select the Zone of this subzone: </label>
-                    <select id="zoneReference" name="zoneReference" class="form-control">
-                        <option value="" disabled selected>Select an option</option>
-                    </select>
-                </div>
-                <!-- Description Input-->
-                <div class="form-group basic-textarea">
-                    <label for="subzoneDescription"> Subzone Description: </label>
-                    <textarea class="form-control text-center" id="subzoneDescription" placeholder="Brief description of the subzone" required rows="4"></textarea>
-                </div>  
-                <!-- End Description Input-->
-                <div class="form-group row">   
-                    <div class="col-6">
-                        <button type="button" id="query" onclick="saveSubzone()" class="col-12 btn btn-success btn-rounded text-center"> Save </button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" id="query" onclick="clearInputsSubzone()" class="col-12 btn btn-warning btn-rounded text-center"> Cancel </button>
-                    </div>
-                </div>
-            </form>
-            <br>
-        </div>
-        <!-- END SUBZONES-->
     </div>
     <br>
     <div class="col-sm-8">

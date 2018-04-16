@@ -1,19 +1,5 @@
-$.get("https://smartsecurity-webservice.herokuapp.com/api/zone", function(data){
-    if(data.length===0){
-        console.log("No se encontraron campus ");
-    }
-    else{
-        campus = data;
-        campus.forEach(element => {
-            $('#zonelist').append($('<option>', {
-                value: element['idZone'],
-                text: element['name']
-            })); 
-        });
-    }
-});
 //SELECTOR CHANGE VALUE: NAME=SELECTOR ZONE
-$('#zonelist').change(function() {
+$('#zonelist3').change(function() {
     let idZone = $(this).val()
     //GET ALL INFORMATION OF A SPECIFIC CAMPUS
     $.get("https://smartsecurity-webservice.herokuapp.com/api/zone/"+idZone, function(data){
@@ -29,11 +15,9 @@ $('#zonelist').change(function() {
     });
 });
 
-function searching2(){
-    let phone = $('#input-search2').val();
-    console.log($("#zonelist").val());
-    console.log(phone);
-    fetch("https://smartsecurity-webservice.herokuapp.com/service/devices/zone/"+$("#zonelist").val()+"/owner?phoneNumber="+phone, {
+function searching3(){
+    console.log($("#zonelist3").val());
+    fetch("https://smartsecurity-webservice.herokuapp.com/service/devices/zone/"+$("#zonelist3").val(), {
         method: 'GET',
         headers: {
             'Access-Control-Allow-Methods':'GET, POST, OPTIONS, PUT, PATCH, DELETE'
@@ -47,6 +31,3 @@ function searching2(){
         console.log(error);
     })
 }
-
-
-    

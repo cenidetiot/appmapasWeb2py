@@ -6,8 +6,8 @@ var zoneLocation = [];
 var isOnCampus = false;
 
 //HIDE ELEMNTS
-//$("#dateTimeInput").show();
 $("#FormGroup2").hide();
+$("#FormGroup3").hide();
 
 //SELECTOR CHANGE VALUE: NAME=SELECTOR SEARCH
 $('select[name=optionsView]').change(function() {
@@ -15,10 +15,17 @@ $('select[name=optionsView]').change(function() {
     if(value==="who-was"){
         $("#FormGroup2").hide();
         $("#FormGroup1").show();
+        $("#FormGroup3").hide();
     }
-    else if(value==="who-are"){
+    else if(value==="who-is"){
         $("#FormGroup1").hide();
         $("#FormGroup2").show();
+        $("#FormGroup3").hide();
+    }
+    else if (value==="devices-in-zone"){
+        $("#FormGroup1").hide();
+        $("#FormGroup2").hide();
+        $("#FormGroup3").show();
     }
     else if(value === ""){
         alert("Select an option view");
@@ -37,7 +44,7 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
     accessToken: 'pk.eyJ1IjoiaGFpZGVlIiwiYSI6ImNqOXMwenczMTBscTIzMnFxNHVyNHhrcjMifQ.ILzRx4OtBRK7az_4uWQXyA'
 }).addTo(map);
 
-//GET ALL CAMPUS REGISTERED
+//GET ALL ZONES REGISTERED
 $.get("https://smartsecurity-webservice.herokuapp.com/api/zone", function(data){
     if(data.length===0){
         console.log("No se encontraron campus ");
@@ -45,7 +52,15 @@ $.get("https://smartsecurity-webservice.herokuapp.com/api/zone", function(data){
     else{
         campus = data;
         campus.forEach(element => {
-            $('#select-search-zone').append($('<option>', {
+            $('#zonelist1').append($('<option>', {
+                value: element['idZone'],
+                text: element['name']
+            })); 
+            $('#zonelist2').append($('<option>', {
+                value: element['idZone'],
+                text: element['name']
+            })); 
+            $('#zonelist3').append($('<option>', {
                 value: element['idZone'],
                 text: element['name']
             })); 
@@ -54,7 +69,7 @@ $.get("https://smartsecurity-webservice.herokuapp.com/api/zone", function(data){
 });
 
 //SELECTOR CHANGE VALUE: NAME=SELECTOR ZONE
-$('select[name=selectorZone]').change(function() {
+$('#zonelist1').change(function() {
     let idZone = $(this).val()
     //GET ALL INFORMATION OF A SPECIFIC CAMPUS
     $.get("https://smartsecurity-webservice.herokuapp.com/api/zone/"+idZone, function(data){
@@ -82,10 +97,10 @@ function searching1(){
     return;
 }
 /*function searchUser(userData){
-    $.get("https://smartsecurity-webservice.herokuapp.com/crate/locationOwnerDateTime?owner="+userData['id']+"&date="+date+"&time="+hour, function(data){
+    $.get("https://smartsecurity-webservice.herokuapp.com/crate/locationOwnerDateTime?owner="+userData[0]['id']+"&date="+date+"&time="+hour, function(data){
         if(data.length===0){
-            console.log("No se encontraron registros con el Usuario: "+userData['id']+"en la fecha y hora especificados: "+dateTime);
-            alert("No se encontraron registros con el Usuario:: "+userData['id']+"en la fecha y hora especificados: "+dateTime);
+            console.log("No se encontraron registros con el Usuario: "+userData[0]['id']+"en la fecha y hora especificados: "+dateTime);
+            alert("No se encontraron registros con el Usuario:: "+userData[0]['id']+"en la fecha y hora especificados: "+dateTime);
         }
         else{
             let searchUserinCampus = searchingUserInCampus(data['location']);
@@ -93,11 +108,12 @@ function searching1(){
                 console.log("here results");
                 console.log(result) //will log results.
                 if(result){
+                    console.log("si");
                     showMap(locationCoordinates, data);
                 }
                 else{
-                    alert("El usuario: "+idUser+" no se encontró en la zona especificada en la fecha y hora especificada: "+dateTime);
-                    console.log("El usuario: "+idUser+" no se encontró en la zona especificada en la fecha y hora especificada: "+dateTime);
+                    alert("El usuario: "+idUser+" no se encontró en la zona especificada en la fecha y hora especificada");
+                    console.log("El usuario: "+idUser+" no se encontró en la zona especificada en la fecha y hora especificada");
                 }    
             }) 
         }
@@ -137,6 +153,7 @@ function searching1(){
         return false;
     };
 }*/
+
 function searchUserInfo(phoneNumber){
     console.log(phoneNumber);
     fetch("https://smartsecurity-webservice.herokuapp.com/api/user?phoneNumber="+phoneNumber, {
@@ -147,8 +164,13 @@ function searchUserInfo(phoneNumber){
     })
     .then((res) => res.json())
     .then((data)=> {
-        console.dir(data)   
-        //searchUser(data);
+        console.dir(data)
+        if(data){
+            //searchUser(data);
+        }
+    })
+    .catch((error)=>{
+        console.log(error);
     })
 }
 

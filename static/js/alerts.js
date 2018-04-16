@@ -1,45 +1,27 @@
 
-$("#option-search-subzone").hide();
+//$("#option-search-subzone").hide();
 searchZones();
 var firstTimeZones = false;
 var firstTimeSubzones = false;
-L.mapbox.accessToken = 'pk.eyJ1IjoiaGFpZGVlIiwiYSI6ImNqOXMwenczMTBscTIzMnFxNHVyNHhrcjMifQ.ILzRx4OtBRK7az_4uWQXyA';
+var marker;
+//L.mapbox.accessToken = 'pk.eyJ1IjoiaGFpZGVlIiwiYSI6ImNqOXMwenczMTBscTIzMnFxNHVyNHhrcjMifQ.ILzRx4OtBRK7az_4uWQXyA';
 
 //MAP INICIALIZATION
-var map = L.mapbox.map('mapid', 'mapbox.streets')
-    .setView([0, 0], 2);
-// L.marker is a low-level marker constructor in Leaflet.
-/*var marker = L.marker([0, 0], {
-    icon: L.mapbox.marker.icon({
-        'marker-size': 'large',
-        'marker-symbol': 'car',
-        'marker-color': '#fa0'
-    })
-})
-.addTo(map);*/
+var map = L.map("mapid").setView([0, -0], 2);
+
+// MAPBOX STYLE ON THE MAP
+L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiaGFpZGVlIiwiYSI6ImNqOXMwenczMTBscTIzMnFxNHVyNHhrcjMifQ.ILzRx4OtBRK7az_4uWQXyA', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 20,
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1IjoiaGFpZGVlIiwiYSI6ImNqOXMwenczMTBscTIzMnFxNHVyNHhrcjMifQ.ILzRx4OtBRK7az_4uWQXyA'
+}).addTo(map);
 //CENTER MARKER
-marker.on('click', function(e) {
-    map.panTo(marker.getLatLng());
-});
+function markerOnClick(e){
+    map.panTo(this.getLatLng());
+}
 //SELECTOR CHANGE VALUE
-$('#show-alerts-of').change(function() {
-    let value = $(this).val()
-    if(value==="principal-zone"){
-        $("#option-search-zone").show();
-        $("#option-search-subzone").hide();
-        searchZones();
-    }
-    else if(value==="specific-subzone"){
-        $("#option-search-subzone").show();
-        $("#option-search-zone").hide();
-        searchSubzones();
-    }
-    else if(value === ""){
-        alert("Select an option view");
-    }
-    console.log($(this).val())
-});
-/*$('#').change(function() {
+/*$('#show-alerts-of').change(function() {
     let value = $(this).val()
     if(value==="principal-zone"){
         $("#option-search-zone").show();
@@ -56,6 +38,7 @@ $('#show-alerts-of').change(function() {
     }
     console.log($(this).val())
 });*/
+
 function centerMap(value, category){
     fetch("https://smartsecurity-webservice.herokuapp.com/api/"+category+"/"+value, {
         method: 'GET',
@@ -95,7 +78,7 @@ function searchZones(){
         showZones(zones);
     })
 }
-function showSubzones(subzones){
+/*function showSubzones(subzones){
     if(!firstTimeSubzones){
         for(let i=0; i<subzones.length;i++){
             $('#option-search-2').append($('<option>', {
@@ -105,8 +88,8 @@ function showSubzones(subzones){
         }
         firstTimeSubzones = true;
     }
-}
-function searchSubzones(){
+}*/
+/*function searchSubzones(){
     fetch("https://smartsecurity-webservice.herokuapp.com/api/subzone", {
         method: 'GET',
         headers: {
@@ -119,9 +102,18 @@ function searchSubzones(){
         subzones = data;
         showSubzones(subzones)
     })
-}
+}*/
 function queryAlerts(){
-    if($('#show-alerts-of').val()==="principal-zone"){
+    let zoneSelected = $('#option-search-1').val();
+    centerMap(zoneSelected, "zone");
+    if($('#alerts-visualization').val()==="history"){
+        getAlerts("history", "zone", zoneSelected)
+    }
+    else if($('#alerts-visualization').val()==="current"){
+        getAlerts("current", "zone", zoneSelected)
+    }
+
+    /*if($('#show-alerts-of').val()==="principal-zone"){
         let zoneSelected = $('#option-search-1').val();
         centerMap(zoneSelected, "zone");
         if($('#alerts-visualization').val()==="history"){
@@ -140,7 +132,7 @@ function queryAlerts(){
         else if($('#alerts-visualization').val()==="current"){
             getAlerts("current", "subzone", subzoneSelected);
         }
-    }
+    }*/
 }
 function getAlerts(alertsVisualization, category, value){
     fetch("https://smartsecurity-webservice.herokuapp.com/service/alerts/"+category+"/"+alertsVisualization+"/"+value, {
@@ -156,13 +148,15 @@ function getAlerts(alertsVisualization, category, value){
             data.forEach((element, index)=>{
                 let tempLocation = JSON.parse("["+element['location']+"]")
                 console.log(tempLocation);
-                var marker = L.marker(JSON.parse("["+element['location']+"]"), {
-                    icon: L.mapbox.marker.icon({
+                marker = L.marker(JSON.parse("["+element['location']+"]"), {
+                    /*icon: L.marker.icon({
                         'marker-size': 'large',
                         'marker-symbol': 'car',
                         'marker-color': '#fa0'
-                    })
+                    })*/
                 })
+                .on('click', markerOnClick)
+                .bindPopup('Category: '+element['category']+'<br/> Subcategory: '+element['subcategory']).openPopup()
                 .addTo(map);
             })
         }
