@@ -1,7 +1,7 @@
 //HIDE ELEMNTS
-$("#FormGroup2").hide();
+//$("#FormGroup2").hide();
 //SELECTOR CHANGE VALUE: NAME=SELECTOR SEARCH
-$('select[name=optionsView]').change(function() {
+/*$('select[name=optionsView]').change(function() {
     let value = $(this).val()
     if(value==="zones"){
         $("#FormGroup2").hide();
@@ -17,7 +17,7 @@ $('select[name=optionsView]').change(function() {
     }
     console.log($(this).val())
 });
-
+*/
 // INITIALIZATION OF THE MAP
 var map = L.map("mapid").setView([0, -0], 2);
 
@@ -192,19 +192,19 @@ function clearInputsZone(){
     return;
 }
 // FUNCTION TO CLEAR ALL THE INPUTS OF SUBZONE
-function clearInputsSubzone(){
+/*function clearInputsSubzone(){
     $("#subzoneName").val("");
     $("select[name=subzoneCategories]").val("");
     $("#subzoneDescription").val("");
     map.setView(new L.LatLng(0,0), 2);
     return;
-}
+}*/
 // FUNCTION TO SAVE THE ZONE INFORMATION
 function saveZone(){
     let zone = {
         name: $("#zoneName").val(),
         address:  $("#zoneAddress").val(),
-        category: $('select[name=zoneCategories]').val(),
+        //category: $('select[name=zoneCategories]').val(),
         description: $('#zoneDescription').val(),
         centerPoint: pointMap,
         location: coordinatesConverted
@@ -214,13 +214,14 @@ function saveZone(){
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Methods':'POST'
+            'Access-Control-Allow-Methods':'POST, OPTIONS'
         },
         body : JSON.stringify(zone)
     })
     .then((respuesta) => {
         if(respuesta.status != 201){
             alert("An error has ocurred to save the subzone entity");
+            clearInputsZone();
         }
         else{
             console.log(respuesta);
@@ -231,7 +232,7 @@ function saveZone(){
     return;
 }
 //FUCNTION TO SAVE THE SUBZONE INFORMATION.
-function saveSubzone(){
+/*function saveSubzone(){
     let subzone = {
         name: $("#subzoneName").val(),
         category: $("select[name=subzoneCategories]").val(),
@@ -260,4 +261,4 @@ function saveSubzone(){
         }
     })
     return;
-}
+}*/
