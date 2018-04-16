@@ -1,8 +1,8 @@
 //Variables
-var date = "";
+var date,dateTime, dateUTC, timeHour = "";
 var hour = "";
 var phonenumber = null;
-var zoneLocation = [];
+var zoneLocation,dateTimeSplit = [];
 var isOnCampus = false;
 
 //HIDE ELEMNTS
@@ -85,41 +85,54 @@ $('#zonelist1').change(function() {
     });
 });
 function searching1(){
+    //GET DATE AND HOUR FROM INPUTS
     date = $("#dateInput").val();
     console.log(date);
-    let dateUTC = new Date(date).toISOString();
-    console.log(dateUTC);
     hour = $('#timeInput').val();
     console.log(hour);
+    //CONCATENATE DATE AND TIME
+    dateTime = date+"T"+hour+":00:00.000Z";
+    console.log(dateTime);
+    //DATE UTC
+    dateUTC = new Date(dateTime).toISOString();
+    console.log(dateUTC);
+    //ARRAY DATETIME
+    dateTimeSplit = dateUTC.split("T");
+    console.log(dateTimeSplit);
+
+    timeHour = dateTimeSplit[1].substring(0,2);
+    console.log(timeHour);
+
+    //PHONE NUMBER FORM INPUT
     phonenumber = $('#phonenumber-input').val();
     console.log(phonenumber);
     searchUserInfo(phonenumber);
     return;
 }
-/*function searchUser(userData){
-    $.get("https://smartsecurity-webservice.herokuapp.com/crate/locationOwnerDateTime?owner="+userData[0]['id']+"&date="+date+"&time="+hour, function(data){
+function searchUser(userData){
+    $.get("https://smartsecurity-webservice.herokuapp.com/crate/locationOwnerDateTime?owner="+userData[0]['id']+"&date="+dateTimeSplit[0]+"&time="+timeHour, function(data){
         if(data.length===0){
-            console.log("No se encontraron registros con el Usuario: "+userData[0]['id']+"en la fecha y hora especificados: "+dateTime);
-            alert("No se encontraron registros con el Usuario:: "+userData[0]['id']+"en la fecha y hora especificados: "+dateTime);
+            console.log("No se encontraron registros con el Usuario: "+userData[0]['firstName']+" en la fecha y hora especificados: "+date+" "+hour+" hours");
+            alert("No se encontraron registros con el Usuario: "+userData[0]['firstName']+" en la fecha y hora especificados: "+date+" "+hour+" hours");
         }
         else{
-            let searchUserinCampus = searchingUserInCampus(data['location']);
+            console.log(data);
+            let searchUserinCampus = searchingUserInCampus(data[0]['location']);
             searchUserinCampus.then(function(result) {
                 console.log("here results");
                 console.log(result) //will log results.
                 if(result){
-                    console.log("si");
                     showMap(locationCoordinates, data);
                 }
                 else{
-                    alert("El usuario: "+idUser+" no se encontró en la zona especificada en la fecha y hora especificada");
-                    console.log("El usuario: "+idUser+" no se encontró en la zona especificada en la fecha y hora especificada");
+                    alert("El usuario: "+userData[0]['firstName']+" no se encontró en la zona  en la fecha y hora especificada: "+date+" "+hour+" hours");
+                    console.log("El usuario: "+userData[0]['firstName']+" no se encontró en la zona en la fecha y hora especificada: " +date+" "+hour+" hours");
                 }    
             }) 
         }
     }); 
-}*/
-/*async function searchingUserInCampus(locationCoordinates){
+}
+async function searchingUserInCampus(locationCoordinates){
     console.log(locationCoordinates)
     console.log(zoneLocation);
     let query = {
@@ -134,25 +147,29 @@ function searching1(){
         },
         body : JSON.stringify(query)
     })
-    .then((respuesta) => {
-        if(respuesta.status != 201){
+    .then((res) => {
+        res.json()
+        console.log(res)
+        if(res.status != 200){
             alert("An error has ocurred to search the user in the zone");
-        }
-        else{
-            console.log(respuesta);
-            isOnCampus = respuesta.isOnCampus;
-            console.log(isOnCampus);
             return;
         }
     })
-    console.log(isOnCampus);
+    .then((data)=> {
+        if(data){
+            console.dir(data)
+            isOnCampus = data.inzone;
+            console.log(isOnCampus);
+            return
+        }
+    })
     if(isOnCampus){
         return true;
     }
     else{
         return false;
     };
-}*/
+}
 
 function searchUserInfo(phoneNumber){
     console.log(phoneNumber);
@@ -166,7 +183,7 @@ function searchUserInfo(phoneNumber){
     .then((data)=> {
         console.dir(data)
         if(data){
-            //searchUser(data);
+            searchUser(data);
         }
     })
     .catch((error)=>{

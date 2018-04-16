@@ -10,7 +10,7 @@
 <script src="{{=URL('static','js/moment.js')}}"></script>
 <script src="{{=URL('static','js/moment-timezone.js')}}"></script>
 <script src="{{=URL('static','js/luxon.min.js')}}"></script>
-<script src="{{=URL('static','js/devices1.js')}}"></script>
+<script src="{{=URL('static','js/devices.js')}}"></script>
 <script src="{{=URL('static','js/devices2.js')}}"></script>
 <script src="{{=URL('static','js/devices3.js')}}"></script>
 {{end}}
@@ -70,8 +70,8 @@
               <input type="date" name="date" id="dateInput" class="form-control">
             </div>
             <div class="form-group">
-              <label for="timeInput" id="label-time-input"> Type the hour: </label>
-              <input type="text" placeholder="00" name="timeInput" id="timeInput" class="form-control"/>
+              <label for="timeInput" id="label-time-input"> Type the hour, in 24 hours format (00-24): </label>
+              <input type="text" placeholder="Example: 16" name="timeInput" id="timeInput" class="form-control"/>
             </div>
             <button type="button" id="query" onclick="searching1()" class="col-12 btn btn-success btn-rounded text-center"> Consult </button>
           </form>
