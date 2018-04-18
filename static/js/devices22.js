@@ -28,7 +28,14 @@ $('#zonelist2').change(function() {
         }
     });
 });
-
+function showDeviceOnMap(data){
+    let locationTemp = data[0]['location'].split(",")
+    map.setView(new L.LatLng(Number(locationTemp[0]), Number(locationTemp[1])), 19);
+    polyline = L.polyline(zoneLocation).addTo(map);
+    var marker = L.marker(locationTemp).addTo(map)
+        .bindPopup('idDevice: '+data[0]['id']+'<br> Owner: '+data[0]['owner'])
+        .openPopup()
+}
 function searching2(){
     let phone = $('#input-search2').val();
     console.log($("#zonelist2").val());
@@ -41,7 +48,13 @@ function searching2(){
     })
     .then((res) => res.json())
     .then((data)=> {
-        console.dir(data)   
+        if(data.length === 0){
+            alert("This device has not been found in the zone");
+        }  
+        else{
+            console.dir(data) 
+            showDeviceOnMap(data);
+        }
     })
     .catch((error)=>{
         console.log(error);

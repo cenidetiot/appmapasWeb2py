@@ -1,3 +1,4 @@
+
 //SELECTOR CHANGE VALUE: NAME=SELECTOR ZONE
 $('#zonelist3').change(function() {
     let idZone = $(this).val()
@@ -9,6 +10,7 @@ $('#zonelist3').change(function() {
         else{
             console.log(data);
             zoneLocation = data['location'];
+            console.log(zoneLocation);
             map.setView(new L.LatLng(data['centerPoint'][0], data['centerPoint'][1]), 18);
             polyline = L.polyline( data['location'], {color: '#ff6666'}).addTo(map);
         }
@@ -18,11 +20,13 @@ $('#zonelist3').change(function() {
 function showDevicesOnmap(data){
     if(data.length != 0){
         for(let i=0; i<data.length; i++){
-            map.setView(new L.LatLng(data[i]['location'][0], data[i]['location'][1]), 19);
-            polyline = L.polyline(zoneLocation.location).addTo(map);
-            L.marker(data['location']).addTo(map)
-                .bindPopup('idDevice: '+data['id']+'<br> Owner: '+data['owner'])
-                .openPopup();
+            let locationTemp = data[i]['location'].split(",")
+            console.log(locationTemp);
+            map.setView(new L.LatLng(Number(locationTemp[0]), Number(locationTemp[1])), 19);
+            polyline = L.polyline(zoneLocation).addTo(map);
+            var marker = L.marker(locationTemp).addTo(map)
+                .bindPopup('idDevice: '+data[i]['id']+'<br> Owner: '+data[i]['owner'])
+                .openPopup()
         }
     }
     else{

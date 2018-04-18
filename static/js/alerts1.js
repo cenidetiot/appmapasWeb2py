@@ -156,7 +156,7 @@ function getAlerts(alertsVisualization, category, value){
                     })*/
                 })
                 .on('click', markerOnClick)
-                .bindPopup('Category: '+element['category']+'<br/> Subcategory: '+element['subcategory']).openPopup()
+                .bindPopup('Category: '+element['category']+'<br/> Subcategory: '+element['subCategory']+'<br/> Severity: '+element['severity']).openPopup()
                 .addTo(map);
             })
         }

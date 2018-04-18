@@ -122,53 +122,78 @@ function searchUser(userData){
                 console.log("here results");
                 console.log(result) //will log results.
                 if(result){
-                    showMap(locationCoordinates, data);
+                   showMap(data[0]['location'], data);
                 }
                 else{
                     alert("El usuario: "+userData[0]['firstName']+" no se encontró en la zona  en la fecha y hora especificada: "+date+" "+hour+" hours");
                     console.log("El usuario: "+userData[0]['firstName']+" no se encontró en la zona en la fecha y hora especificada: " +date+" "+hour+" hours");
                 }    
-            }) 
+            })
         }
     }); 
 }
 async function searchingUserInCampus(locationCoordinates){
     console.log(locationCoordinates)
-    console.log(zoneLocation);
-    let query = {
+    console.log(zoneLocation)
+    let Point = locationCoordinates
+    let Polygon = zoneLocation
+    x = Point[0]
+	y = Point[1]
+    let j = Polygon.length - 1
+    let inzone = false
+
+    for (let i = 0 ; i<= Polygon.length-1 ; i++){
+    	if( (Polygon[i][1] < y && Polygon[j][1] >= y) || (Polygon[j][1] < y && Polygon[i][1] >= y)){
+    		if (Polygon[i][0] + (y - Polygon[i][1]) / (Polygon[j][1] - Polygon[i][1]) * (Polygon[j][0] - Polygon[i][0]) < x) {
+    			inzone = !inzone
+    		}
+    	}
+    	j=i
+
+    }
+    if(inzone){
+        return true;
+    }
+    else{
+        return false;
+    }
+    /*let query = {
         point: locationCoordinates,
         polygon: zoneLocation
     }
-    await fetch("https://smartsecurity-webservice.herokuapp.com/service/zone/point", {
+
+    /*await fetch("https://smartsecurity-webservice.herokuapp.com/service/zone/point", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Methods':'POST'
         },
         body : JSON.stringify(query)
-    })
-    .then((res) => {
+    })*/
+    /*.then((res) => {
         res.json()
-        console.log(res)
+        console.log("este es el res"+JSON.stringify(res.body))
         if(res.status != 200){
             alert("An error has ocurred to search the user in the zone");
             return;
         }
-    })
-    .then((data)=> {
-        if(data){
+    })*/
+    //.then(console.log)
+    /*.then((data)=> {
+        console.dir(data);
+       /* if(data){
             console.dir(data)
             isOnCampus = data.inzone;
             console.log(isOnCampus);
             return
         }
     })
-    if(isOnCampus){
+   /* if(isOnCampus){
         return true;
     }
     else{
         return false;
-    };
+    };*/
 }
 
 function searchUserInfo(phoneNumber){
@@ -191,26 +216,26 @@ function searchUserInfo(phoneNumber){
     })
 }
 
-/*function showMap(location, dataReceived){
+function showMap(location, data){
     console.log(location);
-    let data = JSON.parse(dataReceived);
+    //let data = JSON.parse(dataReceived);
     console.dir(data);
     //===============================DATE BLOCK====================================
     //MEXICO TIMEZONE
     moment.tz.add("America/Mexico_City|LMT MST CST CDT CWT|6A.A 70 60 50 50|012121232324232323232323232323232323232323232323232323232323232323232323232323232323232323232323232|-1UQF0 deL0 8lc0 17c0 10M0 1dd0 gEn0 TX0 3xd0 Jb0 6zB0 SL0 e5d0 17b0 1Pff0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 1fB0 WL0 1fB0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0|20e6");
     //ZURICH TIMEZONE
     //moment.tz.add("Europe/Zurich|CET CEST|-10 -20|01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010|-19Lc0 11A0 1o00 11A0 1xG10 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|38e4"):
-    let date = data['time_index'];
+    let date = data[0]['time_index'];
     let dateUnFormatted = moment.tz(date,'America/Mexico_City');
     // DATE ZÚRICH
     //let dateUnFormatted = moment.tz(date,'Europe/Zurich');
     let dateFormated = dateUnFormatted.format();
-
     console.log(dateFormated);
+    
     map.setView(new L.LatLng(location[0], location[1]), 18);
-    polyline = L.polyline(campusData.location).addTo(map);
-    $("#text-whowascard").html("ID device: "+data['entity_id']+'<br> Owner: '+data['owner']+'<br> DateTime: '+dateFormated);
+
+    polyline = L.polyline(zoneLocation).addTo(map);
     L.marker(location).addTo(map)
-        .bindPopup('idDevice: '+data['entity_id']+'<br> Owner: '+data['owner']+'<br> DateTime: '+dateFormated)
+        .bindPopup('idDevice: '+data[0]['entity_id']+'<br> Owner: '+data[0]['owner']+'<br> DateTime: '+dateFormated)
         .openPopup();
-}*/
+}
