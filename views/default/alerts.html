@@ -2,16 +2,14 @@
 
 {{block head}}
 <link rel="stylesheet" href="{{=URL('static','css/estilos.css')}}"/>
-<link rel="stylesheet" href="{{=URL('static','css/leaflet.css')}}"/>
-<link rel="stylesheet" href="{{=URL('static','css/leafletDraw.css')}}"/>
 <!-- MAPBOX BLOCK -->
-<!--<link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
-<script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>-->
+<link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+<script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
 <!-- END MAPBOX BLOCK -->
 {{end}} 
 
 {{block page_js}}
-<script src="{{=URL('static','js/alerts1.js')}}"></script>
+<script src="{{=URL('static','js/alerts.js')}}"></script>
 {{end}}
 
 {{block header}}
@@ -37,37 +35,19 @@
 </div>
 <br>
 <div class="row">
-  <div class="col-sm-4" >
+  <div class="col-sm-4 card" >
       <div class="form-group" id="FormGroup1">
           <form method="GET" action="javascript:void(0);">
-              <!-- -->
-              <!--<div class="form-group">
-                <label for="show-alerts-of"> Show alerts of: </label>
-                <select id="show-alerts-of" name="show-alerts-of" class="form-control">
-                    <option value="" disabled selected>Select an option.</option>
-                    <option value="principal-zone"> Principal Zone </option>
-                    <option value="specific-subzone"> Specific Subzone </option>
-                </select>
-              </div>-->
-              <!--  -->
+            <br>
               <div class="form-group" id="option-search-zone">
-                <label for="option-search-1" id="option-search-zone-label">Select the zone: </label>
+                <label for="option-search-1" id="option-search-zone-label"><i class="far fa-map"></i>  Select the zone: </label>
                 <select id="option-search-1" name="option-search-1" class="form-control">
                     <option value="" disabled selected> Select an option </option>
                 </select>
               </div>
               <!---->
-              <!--  -->
-              <!--<div class="form-group" id="option-search-subzone">
-                <label for="option-search-2" id="option-search-subzone-label">Select the subzone: </label>
-                <select id="option-search-2" name="option-search-2" class="form-control">
-                    <option value="" disabled selected> Select an option </option>
-                </select>
-              </div>-->
-              <!---->
-              <!--  -->
               <div class="form-group">
-                <label for="alerts-visualization">Choose an alert visualization: </label>
+                <label for="alerts-visualization"><i class="far fa-bell"></i>  Choose an alert visualization: </label>
                 <select id="alerts-visualization" name="alerts-visualization" class="form-control">
                     <option value="" disabled selected> Select an option </option>
                     <option value="history"> History Alerts </option>
@@ -79,9 +59,6 @@
                 <div class="col-12">
                   <button type="button" id="query" onclick="queryAlerts()" class="col-12 btn btn-success btn-rounded text-center "> Consult </button>
                 </div>
-                <!--<div class="col-6">
-                  <button type="button" id="query" onclick="clearInputs()" class="col-12 btn btn-warning btn-rounded text-center"> Clear options </button>
-                </div>-->
               </div>
           </form>
           <br>
@@ -93,13 +70,5 @@
       <div id="mapid">
       </div>
       <br>
-      <!--- CARD DATA -->
-      <!--<div class="card text-center">
-          <div class="card-block">
-              <h4 class="card-title"> Data: </h4>
-              <p class="card-text" id="text-whowascard"></p>
-          </div>
-      </div>-->
-      <!--END CARD DATA -->
   </div>
 </div>

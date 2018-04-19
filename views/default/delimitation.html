@@ -2,12 +2,18 @@
 
 {{block head}}
 <link rel="stylesheet" href="{{=URL('static','css/estilos.css')}}"/>
-<link rel="stylesheet" href="{{=URL('static','css/leaflet.css')}}"/>
-<link rel="stylesheet" href="{{=URL('static','css/leafletDraw.css')}}"/>
+<!-- LEAFLET BLOCK -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+<script src="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.js"></script>
+<!-- END LEAFLET BLOCK-->
+
 {{end}} 
 
 {{block page_js}}
-<script src="{{=URL('static','js/delimitation1.js')}}"></script>
+<script src="{{=URL('static','js/delimitation.js')}}"></script>
 {{end}}
 
 {{block header}}
@@ -39,14 +45,15 @@
             </div>
             <form method="GET" action="javascript:void(0);">
                 <!-- Zone name-->
+                <br>
                 <div class="form-group">
-                    <label for="zoneName"> Zone name: </label>
+                    <label for="zoneName">  <i class="far fa-map"></i>  Zone name: </label>
                     <input type="text" name="zoneName" id="zoneName" class="form-control text-center">
                 </div>
 
                 <!-- Address's Zone -->
                 <div class="form-group">
-                    <label for="zoneAddress">Address's Zone: </label>
+                    <label for="zoneAddress"><i class="fas fa-map-marker-alt"></i>  Address's Zone: </label>
                     <textarea class="form-control text-center" id="zoneAddress" placeholder="Insert the address of the zone" required rows="6"></textarea>
                 </div>  
                 <div class="form-group row">   
@@ -60,7 +67,7 @@
                 <!-- End Address's Zone-->
                 <!-- Description Input-->
                 <div class="form-group basic-textarea">
-                    <label for="zoneDescription"> Zone Description: </label>
+                    <label for="zoneDescription"> <i class="fas fa-info-circle"></i>  Zone Description: </label>
                     <textarea class="form-control text-center" id="zoneDescription" placeholder="Brief description of the zone" required rows="4"></textarea>
                 </div>  
                 <!-- End Description Input-->

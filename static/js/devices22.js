@@ -1,17 +1,4 @@
-/*$.get("https://smartsecurity-webservice.herokuapp.com/api/zone", function(data){
-    if(data.length===0){
-        console.log("No se encontraron campus ");
-    }
-    else{
-        campus = data;
-        campus.forEach(element => {
-            $('#zonelist').append($('<option>', {
-                value: element['idZone'],
-                text: element['name']
-            })); 
-        });
-    }
-});*/
+
 //SELECTOR CHANGE VALUE: NAME=SELECTOR ZONE
 $('#zonelist2').change(function() {
     let idZone = $(this).val()
@@ -28,16 +15,35 @@ $('#zonelist2').change(function() {
         }
     });
 });
-function showDeviceOnMap(data){
-    let locationTemp = data[0]['location'].split(",")
+function showDeviceOnMap(dataDevice){
+    markerLayer.clearLayers();
+    map.removeLayer(markerLayer)
+    let locationTemp = dataDevice[0]['location'].split(",")
     map.setView(new L.LatLng(Number(locationTemp[0]), Number(locationTemp[1])), 19);
     polyline = L.polyline(zoneLocation).addTo(map);
-    var marker = L.marker(locationTemp).addTo(map)
-        .bindPopup('idDevice: '+data[0]['id']+'<br> Owner: '+data[0]['owner'])
-        .openPopup()
+    fetch("https://smartsecurity-webservice.herokuapp.com/api/user?id="+dataDevice[0]['owner'], {
+        method: 'GET',
+        headers: {
+            'Access-Control-Allow-Methods':'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+        },
+    })
+    .then((res) => res.json())
+    .then((dataUser)=> {
+        console.dir(dataUser)
+        if(dataUser){
+            marker = L.marker(locationTemp).addTo(map)
+            .bindPopup('ID Device: '+dataDevice[0]['id']+'<br> Owner ID: '+dataDevice[0]['owner']+'<br> Name User: '+dataUser[0]['firstName']+ ' '+dataUser[0]['lastName']+'<br> Phone Number: +'+dataUser[0]['phoneNumber'])
+            .openPopup()
+            .addTo(markerLayer);
+            markerLayer.addTo(map);
+        }
+    })
+    .catch((error)=>{
+        console.log(error);
+    })
 }
 function searching2(){
-    let phone = $('#input-search2').val();
+    let phone = $('#phonenumber-countrycode').val()+$('#input-search2').val();
     console.log($("#zonelist2").val());
     console.log(phone);
     fetch("https://smartsecurity-webservice.herokuapp.com/service/devices/zone/"+$("#zonelist2").val()+"/owner?phoneNumber="+phone, {

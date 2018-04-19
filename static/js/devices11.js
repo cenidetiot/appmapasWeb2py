@@ -1,9 +1,16 @@
+$('.datepicker').datepicker({
+    dateFormat: 'yy-mm-dd ',
+    maxDate:'0'
+});
+
 //Variables
 var date,dateTime, dateUTC, timeHour = "";
 var hour = "";
 var phonenumber = null;
 var zoneLocation,dateTimeSplit = [];
 var isOnCampus = false;
+var marker;
+var markerLayer = L.layerGroup()
 
 //HIDE ELEMNTS
 $("#FormGroup2").hide();
@@ -16,16 +23,25 @@ $('select[name=optionsView]').change(function() {
         $("#FormGroup2").hide();
         $("#FormGroup1").show();
         $("#FormGroup3").hide();
+        map.setView(new L.LatLng(0, 0), 2);
+        markerLayer.clearLayers();
+        map.removeLayer(markerLayer)
     }
     else if(value==="who-is"){
         $("#FormGroup1").hide();
         $("#FormGroup2").show();
         $("#FormGroup3").hide();
+        map.setView(new L.LatLng(0, 0), 2);
+        markerLayer.clearLayers();
+        map.removeLayer(markerLayer)
     }
     else if (value==="devices-in-zone"){
         $("#FormGroup1").hide();
         $("#FormGroup2").hide();
         $("#FormGroup3").show();
+        map.setView(new L.LatLng(0, 0), 2);
+        markerLayer.clearLayers();
+        map.removeLayer(markerLayer)
     }
     else if(value === ""){
         alert("Select an option view");
@@ -34,7 +50,11 @@ $('select[name=optionsView]').change(function() {
 });
 
 //MAP CONTAINER 
-map = L.map("mapid").setView([0,0], 2);
+var map = L.map("mapid",{
+    center: [0, -0],
+    zoom: 2,
+    layers: [markerLayer]
+})
 
 // MAPBOX STYLE ON THE MAP
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiaGFpZGVlIiwiYSI6ImNqOXMwenczMTBscTIzMnFxNHVyNHhrcjMifQ.ILzRx4OtBRK7az_4uWQXyA', {
@@ -86,15 +106,18 @@ $('#zonelist1').change(function() {
 });
 function searching1(){
     //GET DATE AND HOUR FROM INPUTS
-    date = $("#dateInput").val();
+    tempDate = $("#dateInput").val();
+    date = tempDate.substring(0,tempDate.length-1)
     console.log(date);
     hour = $('#timeInput').val();
     console.log(hour);
     //CONCATENATE DATE AND TIME
-    dateTime = date+"T"+hour+":00:00.000Z";
+    dateTime = date+"T"+hour+":00";
     console.log(dateTime);
-    //DATE UTC
+    
     dateUTC = new Date(dateTime).toISOString();
+    //dateUTC  = moment.utc(dateTime).format()
+    //DATE UTC
     console.log(dateUTC);
     //ARRAY DATETIME
     dateTimeSplit = dateUTC.split("T");
@@ -104,7 +127,7 @@ function searching1(){
     console.log(timeHour);
 
     //PHONE NUMBER FORM INPUT
-    phonenumber = $('#phonenumber-input').val();
+    phonenumber = $('#phonenumber-countrycode').val()+$('#phonenumber-input').val();
     console.log(phonenumber);
     searchUserInfo(phonenumber);
     return;
@@ -157,43 +180,6 @@ async function searchingUserInCampus(locationCoordinates){
     else{
         return false;
     }
-    /*let query = {
-        point: locationCoordinates,
-        polygon: zoneLocation
-    }
-
-    /*await fetch("https://smartsecurity-webservice.herokuapp.com/service/zone/point", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Methods':'POST'
-        },
-        body : JSON.stringify(query)
-    })*/
-    /*.then((res) => {
-        res.json()
-        console.log("este es el res"+JSON.stringify(res.body))
-        if(res.status != 200){
-            alert("An error has ocurred to search the user in the zone");
-            return;
-        }
-    })*/
-    //.then(console.log)
-    /*.then((data)=> {
-        console.dir(data);
-       /* if(data){
-            console.dir(data)
-            isOnCampus = data.inzone;
-            console.log(isOnCampus);
-            return
-        }
-    })
-   /* if(isOnCampus){
-        return true;
-    }
-    else{
-        return false;
-    };*/
 }
 
 function searchUserInfo(phoneNumber){
@@ -217,8 +203,9 @@ function searchUserInfo(phoneNumber){
 }
 
 function showMap(location, data){
+    markerLayer.clearLayers();
+    map.removeLayer(markerLayer)
     console.log(location);
-    //let data = JSON.parse(dataReceived);
     console.dir(data);
     //===============================DATE BLOCK====================================
     //MEXICO TIMEZONE
@@ -233,9 +220,25 @@ function showMap(location, data){
     console.log(dateFormated);
     
     map.setView(new L.LatLng(location[0], location[1]), 18);
-
     polyline = L.polyline(zoneLocation).addTo(map);
-    L.marker(location).addTo(map)
-        .bindPopup('idDevice: '+data[0]['entity_id']+'<br> Owner: '+data[0]['owner']+'<br> DateTime: '+dateFormated)
-        .openPopup();
+    fetch("https://smartsecurity-webservice.herokuapp.com/api/user?id="+data[0]['owner'], {
+        method: 'GET',
+        headers: {
+            'Access-Control-Allow-Methods':'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+        },
+    })
+    .then((res) => res.json())
+    .then((dataUser)=> {
+        console.dir(dataUser)
+        if(dataUser){
+            markerLayer.addTo(map);
+            marker = L.marker(location)
+            .bindPopup('ID Device: '+data[0]['entity_id']+'<br> Owner ID: '+data[0]['owner']+'<br> DateTime: '+dateFormated+'<br> Name User: '+dataUser[0]['firstName']+ ' '+dataUser[0]['lastName']+'<br> Phone Number: +'+dataUser[0]['phoneNumber'])
+            .addTo(markerLayer)
+            .openPopup()
+        }
+    })
+    .catch((error)=>{
+        console.log(error);
+    })
 }

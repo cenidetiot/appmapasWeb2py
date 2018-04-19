@@ -1,23 +1,4 @@
-//HIDE ELEMNTS
-//$("#FormGroup2").hide();
-//SELECTOR CHANGE VALUE: NAME=SELECTOR SEARCH
-/*$('select[name=optionsView]').change(function() {
-    let value = $(this).val()
-    if(value==="zones"){
-        $("#FormGroup2").hide();
-        $("#FormGroup1").show();
-    }
-    else if(value==="subzones"){
-        $("#FormGroup1").hide();
-        $("#FormGroup2").show();
-        searchZones();
-    }
-    else if(value === ""){
-        alert("Select an option view");
-    }
-    console.log($(this).val())
-});
-*/
+
 // INITIALIZATION OF THE MAP
 var map = L.map("mapid").setView([0, -0], 2);
 
@@ -191,20 +172,12 @@ function clearInputsZone(){
     map.setView(new L.LatLng(0,0), 2);
     return;
 }
-// FUNCTION TO CLEAR ALL THE INPUTS OF SUBZONE
-/*function clearInputsSubzone(){
-    $("#subzoneName").val("");
-    $("select[name=subzoneCategories]").val("");
-    $("#subzoneDescription").val("");
-    map.setView(new L.LatLng(0,0), 2);
-    return;
-}*/
+
 // FUNCTION TO SAVE THE ZONE INFORMATION
 function saveZone(){
     let zone = {
         name: $("#zoneName").val(),
         address:  $("#zoneAddress").val(),
-        //category: $('select[name=zoneCategories]').val(),
         description: $('#zoneDescription').val(),
         centerPoint: pointMap,
         location: coordinatesConverted
@@ -231,34 +204,3 @@ function saveZone(){
     })
     return;
 }
-//FUCNTION TO SAVE THE SUBZONE INFORMATION.
-/*function saveSubzone(){
-    let subzone = {
-        name: $("#subzoneName").val(),
-        category: $("select[name=subzoneCategories]").val(),
-        location: coordinatesConverted,
-        refZone: idZoneSelected,
-        description: $("#subzoneDescription").val()
-    }
-    //console.log(subzone);
-
-    fetch("https://smartsecurity-webservice.herokuapp.com/api/subzone", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Methods':'POST'
-        },
-        body : JSON.stringify(subzone)
-    })
-    .then((respuesta) => {
-        if(respuesta.status != 201){
-            alert("An error has ocurred to save the subzone entity");
-        }
-        else{
-            console.log(respuesta);
-            console.log("Subzone save successfully");
-            clearInputsSubzone();   
-        }
-    })
-    return;
-}*/

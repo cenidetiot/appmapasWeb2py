@@ -1,4 +1,3 @@
-
 //SELECTOR CHANGE VALUE: NAME=SELECTOR ZONE
 $('#zonelist3').change(function() {
     let idZone = $(this).val()
@@ -17,16 +16,31 @@ $('#zonelist3').change(function() {
     });
 });
 
-function showDevicesOnmap(data){
-    if(data.length != 0){
-        for(let i=0; i<data.length; i++){
-            let locationTemp = data[i]['location'].split(",")
+function showDevicesOnmap(dataDevices){
+    markerLayer.clearLayers();
+    map.removeLayer(markerLayer)
+    if(dataDevices.length != 0){
+        for(let i=0; i<dataDevices.length; i++){
+            let locationTemp = dataDevices[i]['location'].split(",")
             console.log(locationTemp);
             map.setView(new L.LatLng(Number(locationTemp[0]), Number(locationTemp[1])), 19);
             polyline = L.polyline(zoneLocation).addTo(map);
-            var marker = L.marker(locationTemp).addTo(map)
-                .bindPopup('idDevice: '+data[i]['id']+'<br> Owner: '+data[i]['owner'])
-                .openPopup()
+            fetch("https://smartsecurity-webservice.herokuapp.com/api/user?id="+dataDevices[i]['owner'], {
+                method: 'GET',
+                headers: {
+                    'Access-Control-Allow-Methods':'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+                },
+             })
+            .then((res) => res.json())
+            .then((dataUser)=> {
+                console.dir(dataUser)
+                if(dataUser){
+                    var marker = L.marker(locationTemp).addTo(map)
+                    .bindPopup('ID Device: '+dataDevices[i]['id']+'<br> Owner ID: '+dataDevices[i]['owner']+'<br> Name User: '+dataUser[0]['firstName']+ ' '+dataUser[0]['lastName']+'<br> Phone Number: +'+dataUser[0]['phoneNumber'])
+                    .addTo(markerLayer);
+                    markerLayer.addTo(map);
+                }
+            })
         }
     }
     else{

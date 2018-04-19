@@ -2,17 +2,21 @@
 
 {{block head}}
 <link rel="stylesheet" href="{{=URL('static','css/estilos.css')}}"/>
-<link rel="stylesheet" href="{{=URL('static','css/leaflet.css')}}"/>
-<link rel="stylesheet" href="{{=URL('static','css/leafletDraw.css')}}"/>
+<!-- LEAFLET BLOCK -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+<script src="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.js"></script>
+<!-- END LEAFLET BLOCK-->
 {{end}} 
 
 {{block page_js}}
 <script src="{{=URL('static','js/moment.js')}}"></script>
 <script src="{{=URL('static','js/moment-timezone.js')}}"></script>
-<script src="{{=URL('static','js/luxon.min.js')}}"></script>
-<script src="{{=URL('static','js/devices.js')}}"></script>
+<script src="{{=URL('static','js/devices11.js')}}"></script>
 <script src="{{=URL('static','js/devices22.js')}}"></script>
-<script src="{{=URL('static','js/devices3.js')}}"></script>
+<script src="{{=URL('static','js/devices33.js')}}"></script>
 {{end}}
 
 {{block header}}
@@ -55,23 +59,68 @@
           <h4 class="text-center"> Search Of User 1 </h4>
         </div>
           <form method="GET" action="javascript:void(0);">
+            <br>
             <div class="form-group">
-              <label for="zonelist1"> Select the Zone: </label>
+              <label for="zonelist1"> <i class="far fa-map"></i> Select the Zone: </label>
               <select id="zonelist1" name="zonelist1" class="form-control">
                 <option value="" disabled selected>Select an option</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="phone-number" id="label-input-search1">User's Phone Number: </label>
-              <input type="text" name="input-search1" id="phonenumber-input" class="form-control">
+              <label for="phone-number" id="label-input-search1"><i class="fas fa-phone"></i>  User's Phone Number: </label>
+              <div class="form-group row">
+                <div class="col-1">
+                  <span class=""><i class="fas fa-plus fa-2x"></i></span>
+                </div>
+                <div class="col-4">
+                  <input type="text" name="input-search1" id="phonenumber-countrycode" class="form-control" required value="52" disabled>
+                </div>
+                <div class="col-7">
+                  <input type="text" name="input-search1" id="phonenumber-input" class="form-control" required>
+                </div>
+              </div>
             </div>
             <div class="form-group">
-              <label for="dateInput" id="label-date-input"> Select the Date: </label>
-              <input type="date" name="date" id="dateInput" class="form-control">
+              <label for="dateInput" id="label-date-input"> <i class="far fa-calendar-alt"></i>  Select the Date: </label>
+              <input type="text" name="date" id="dateInput" class="datepicker form-control">
             </div>
-            <div class="form-group">
-              <label for="timeInput" id="label-time-input"> Type the hour, in 24 hours format (00-24): </label>
-              <input type="text" placeholder="Example: 16" name="timeInput" id="timeInput" class="form-control"/>
+            <label for=""> <i class="far fa-clock"></i> Select the hour (24 format): </label>
+            <div class="form-group row">
+              <div class="col-5">
+                <select class="form-control" id="timeInput">
+                  <option selected>Choose...</option>
+                  <option value="01">01</option>
+                  <option value="02">02</option>
+                  <option value="03">03</option>
+                  <option value="04">04</option>
+                  <option value="05">05</option>
+                  <option value="06">06</option>
+                  <option value="07">07</option>
+                  <option value="08">08</option>
+                  <option value="09">09</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                  <option value="21">21</option>
+                  <option value="22">22</option>
+                  <option value="23">23</option>
+                  <option value="00">00</option>
+                </select>
+              </div>
+              <div class="col-5">
+                <input type="text" class="form-control" value="00" disabled/>
+              </div>
+              <div class="col-2">
+                <h6 class=""><strong> HRS.</strong></h6>
+              </div>
             </div>
             <button type="button" id="query" onclick="searching1()" class="col-12 btn btn-success btn-rounded text-center"> Consult </button>
           </form>
@@ -83,15 +132,26 @@
             <h4 class="text-center">Search of User 2</h4>
           </div>
           <form method="GET" action="javascript:void(0);">
+            <br>
             <div class="form-group">
-              <label for="zonelist2">Select the zone: </label>
+              <label for="zonelist2"> <i class="far fa-map"></i>  Select the zone: </label>
               <select class="form-control" id="zonelist2" name="zonelist2">
                 <option> Select an option </option>
               </select>
             </div>
             <div class="form-group">
-              <label for="input-search2" id="label-input-search2">User's Phone Number: </label>
-              <input type="text" name="input-search2" id="input-search2" class="form-control">
+              <label for="input-search2" id="label-input-search2"> <i class="fas fa-phone"></i>   User's Phone Number: </label>
+              <div class="form-group row">
+                <div class="col-1">
+                  <span class=""><i class="fas fa-plus fa-2x"></i></span>
+                </div>
+                <div class="col-4">
+                  <input type="text" name="input-search1" id="phonenumber-countrycode" class="form-control"  required value="52" disabled>
+                </div>
+                <div class="col-7">
+                  <input type="text" name="input-search2" id="input-search2" class="form-control">
+                </div>
+              </div>
             </div>
             <br>
             <button type="button" id="query" onclick="searching2()" class="col-12 btn btn-success btn-rounded text-center"> Consult </button>
@@ -105,7 +165,8 @@
           </div>
           <form method="GET" action="javascript:void(0);">
             <div class="form-group">
-              <label for="zonelist3">Select the zone: </label>
+              <br>
+              <label for="zonelist3"><i class="far fa-map"></i>   Select the zone: </label>
               <select class="form-control" id="zonelist3" name="zonelist3">
                 <option> Select an option </option>
               </select>
